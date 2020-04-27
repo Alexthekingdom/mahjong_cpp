@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  mahjong
+//  mahjong test
 //
 //  Created by LiShuCheng on 2020/4/25.
 //  Copyright © 2020 LiShuCheng. All rights reserved.
