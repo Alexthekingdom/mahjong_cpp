@@ -2,7 +2,7 @@
 //  main.cpp
 //  mahjong test
 //
-//  Created by LiShuCheng on 2020/4/25.
+//  Created by LiShuCheng on 2020/4/25.adsfadsf
 //  Copyright © 2020 LiShuCheng. All rights reserved.
 //
 
