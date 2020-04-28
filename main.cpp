@@ -153,6 +153,7 @@ int main()
         }
         for (int j = 0; j < 13; j++) {
             sin >> stmp;
+            del_remain(stmp, 1);
             hand.push_back(stmp);
         }
         
