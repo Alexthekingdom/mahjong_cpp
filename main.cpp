@@ -28,7 +28,8 @@ int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 };
 //番种三个值分别代表番种类型，牌型，牌大小
 //番种类型1为碰碰胡，2为五门齐，3为混一色，4为清龙，5为花龙，6为三色三同顺，7为三色三步高
 //牌型用于混一色和清龙，012分别为饼条万，花龙和三色三步高，其中顺子按数分小中大，按饼条万顺序0为小中大，1为大小中，2为中大小，3为大中小，4为小大中，5为中小大
-//牌大小仅用于三色三步高，其值为三步高中间顺子的中间牌数字
+
+//牌大小用于三色三步高和三色三同顺，其值为三步高中间顺子的中间牌数字，三同顺代表顺子中间牌数字
 
 void paiquanzhong() {
     int sanpai = 10, weizhi = 1, type = 0;//权重值的数值，方便之后增加调整权重的内容，type是采用的鸣牌权重类型，此处是鸣牌总权重
@@ -68,6 +69,15 @@ int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i�
     return n;
 }
 
+
+void jiaquan(int i, int j){//当数牌只有一张时，增加1000权重
+    if (shu[i * 9 + j] == 1) {
+        shu_quan_[i * 9 + j][0] += 1000;
+        shu_quan_[i * 9 + j][1] += 1000;
+    }
+}
+
+
 void dingfan() {
     //计算对子数和各花色牌数
     for (int i = 0; i < 3; ++i) {
@@ -97,11 +107,45 @@ void dingfan() {
     //判断碰碰胡，三个以上对子
     if (total_duizi >= 3) {
         fanzhong[0] = 1;
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 1; j <= 9; ++j) {
+                if (shu[i * 9 + j] >= 2) {
+                    shu_quan_[i * 9 + j][0] += 1000;
+                    shu_quan_[i * 9 + j][1] += 1000;
+                }
+            }
+        }
+        for (int i = 1; i <= 4; ++i) {
+            if (feng[i] >= 2) {
+                feng_quan_[i] += 1000;
+            }
+        }
+        for (int i = 1; i <= 3; ++i) {
+            if (jian[i] >= 2) {
+                feng_quan_[i] += 1000;
+            }
+        }
+
         return;
     }
     //判断五门齐，风箭各一对
     if (duizi[3] >= 1 && duizi[4] >= 1) {
         fanzhong[0] = 2;
+
+        for (int i = 1; i <= 4; ++i) {
+            if (feng[i] >= 2) {
+                feng_quan_[i] += 1000;
+                break;
+            }
+        }
+        for (int i = 1; i <= 3; ++i) {
+            if (jian[i] >= 2) {
+                feng_quan_[i] += 1000;
+                break;
+            }
+        }
+
         return;
     }
     //判断混一色，某一色数牌和字牌共9张以上
@@ -109,6 +153,12 @@ void dingfan() {
         if (paizhong[i] >= (9 - paizhong[3] - paizhong[4])) {
             fanzhong[0] = 3;
             fanzhong[1] = i;
+
+            for (int j = 1; j <= 9; ++j) {
+                shu_quan_[i * 9 + j][0] += 1000;
+                shu_quan_[i * 9 + j][1] += 1000;
+            }
+
             return;
         }
     }
@@ -124,6 +174,10 @@ void dingfan() {
         if (yiyou >= qinglong) {
             fanzhong[0] = 4;
             fanzhong[1] = i;
+
+            for (int j = 1; j <= 9; ++j) {
+                jiaquan(i, j);
+            }
             return;
         }
     }
@@ -137,6 +191,12 @@ void dingfan() {
         if (yiyou >= hualong) {
             fanzhong[0] = 5;
             fanzhong[1] = i;
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m + 6);
+            }
+
             return;
         }
         yiyou = 0;
@@ -146,6 +206,12 @@ void dingfan() {
         if (yiyou >= hualong) {
             fanzhong[0] = 5;
             fanzhong[1] = i + 3;
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m + 6);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m);
+            }
+
             return;
         }
     }
@@ -158,6 +224,13 @@ void dingfan() {
         }
         if (yiyou >= santongshun) {
             fanzhong[0] = 6;
+            fanzhong[2] = j;
+            for (int i = 0; i < 3; ++i) {
+                jiaquan(i, j - 1);
+                jiaquan(i, j);
+                jiaquan(i, j + 1);
+            }
+
             return;
         }
     }
@@ -173,6 +246,12 @@ void dingfan() {
                 fanzhong[0] = 5;
                 fanzhong[1] = i;
                 fanzhong[2] = j;
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m - 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m + 1);
+                }
+
                 return;
             }
         }
@@ -185,6 +264,12 @@ void dingfan() {
                 fanzhong[0] = 5;
                 fanzhong[1] = i + 3;
                 fanzhong[2] = j;
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m + 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m - 1);
+                }
+
                 return;
             }
         }
