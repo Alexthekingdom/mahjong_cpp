@@ -3,7 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "MahjongGB/MahjongGB.h"
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+// #include "MahjongGB/MahjongGB.h" 用于线上
 #include <utility>
 
 using namespace std;
