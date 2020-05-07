@@ -16,6 +16,150 @@ int shu_remain[28] = { 0 }, feng_remain[5] = { 0 }, jian_remain[4] = { 0 };//数
 int shu_ting[28][6] = { 0 }, feng_ting[5] = { 0 }, jian_ting[4] = { 0};
 //数牌的6个数分别表示是否听该牌，是否能杠，是否能碰，是否左两位吃，是否右两位吃，是否左右吃
 
+int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 };//对子数和各种牌数，顺序为饼条万风箭
+//番种三个值分别代表番种类型，牌型，牌大小
+//番种类型1为碰碰胡，2为五门齐，3为混一色，4为清龙，5为花龙，6为三色三同顺，7为三色三步高
+//牌型用于混一色和清龙，012分别为饼条万，花龙和三色三步高，其中顺子按数分小中大，按饼条万顺序0为小中大，1为大小中，2为中大小，3为大中小，4为小大中，5为中小大
+//牌大小仅用于三色三步高，其值为三步高中间顺子的中间牌数字
+
+
+int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i为牌种，j为数字，表示顺子中间的牌，返回该顺子中已有的牌数
+    int n = 0;
+    if (shu[i * 9 + j - 1] > 0) {
+        ++n;
+    }
+    if (shu[i * 9 + j] > 0) {
+        ++n;
+    }
+    if (shu[i * 9 + j + 1] > 0) {
+        ++n;
+    }
+    return n;
+}
+
+void dingfan() {
+    //计算对子数和各花色牌数
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 1; j <= 9; ++j) {
+            paizhong[i] += shu[i * 9 + j];
+            if (shu[i * 9 + j] >= 2) {
+                ++total_duizi;
+                ++duizi[i];
+            }
+        }
+    }
+    for (int i = 1; i <= 4; ++i) {
+        paizhong[3] += feng[i];
+        if (feng[i] >= 2) {
+            ++total_duizi;
+            ++duizi[3];
+        }
+    }
+    for (int i = 1; i <= 3; ++i) {
+        paizhong[4] += jian[i];
+        if (jian[i] >= 2) {
+            ++total_duizi;
+            ++duizi[4];
+        }
+    }
+
+    //判断碰碰胡，三个以上对子
+    if (total_duizi >= 3) {
+        fanzhong[0] = 1;
+        return;
+    }
+    //判断五门齐，风箭各一对
+    if (duizi[3] >= 1 && duizi[4] >= 1) {
+        fanzhong[0] = 2;
+        return;
+    }
+    //判断混一色，某一色数牌和字牌共9张以上
+    for (int i = 0; i < 3; ++i) {
+        if (paizhong[i] >= (9 - paizhong[3] - paizhong[4])) {
+            fanzhong[0] = 3;
+            fanzhong[1] = i;
+            return;
+        }
+    }
+
+    int yiyou;
+    //判断清龙，9张需有7张
+    int qinglong = 7;
+    for (int i = 0; i < 3; ++i) {
+        yiyou = 0;
+        yiyou += shunzi_paishu(i, 2);
+        yiyou += shunzi_paishu(i, 5);
+        yiyou += shunzi_paishu(i, 8);
+        if (yiyou >= qinglong) {
+            fanzhong[0] = 4;
+            fanzhong[1] = i;
+            return;
+        }
+    }
+    //判断花龙，9张需有7张
+    int hualong = 7;
+    for (int i = 0; i < 3; ++i) {
+        yiyou = 0;
+        yiyou += shunzi_paishu(i, 2);
+        yiyou += shunzi_paishu((i + 1) % 3, 5);
+        yiyou += shunzi_paishu((i + 2) % 3, 8);
+        if (yiyou >= hualong) {
+            fanzhong[0] = 5;
+            fanzhong[1] = i;
+            return;
+        }
+        yiyou = 0;
+        yiyou += shunzi_paishu(i, 8);
+        yiyou += shunzi_paishu((i + 1) % 3, 5);
+        yiyou += shunzi_paishu((i + 2) % 3, 2);
+        if (yiyou >= hualong) {
+            fanzhong[0] = 5;
+            fanzhong[1] = i + 3;
+            return;
+        }
+    }
+    //判断三色三同顺，9张需有7张
+    int santongshun = 7;
+    for (int j = 2; j <= 8; ++j) {
+        yiyou = 0;
+        for (int i = 0; i < 3; ++i) {
+            yiyou+= shunzi_paishu(i, j);
+        }
+        if (yiyou >= santongshun) {
+            fanzhong[0] = 6;
+            return;
+        }
+    }
+    //判断三色三步高，9张需有7张
+    int sanbugao = 7;
+    for (int j = 3; j <= 7; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            yiyou = 0;
+            yiyou += shunzi_paishu(i, j - 1);
+            yiyou += shunzi_paishu((i + 1) % 3, j);
+            yiyou += shunzi_paishu((i + 2) % 3, j + 1);
+            if (yiyou >= sanbugao) {
+                fanzhong[0] = 5;
+                fanzhong[1] = i;
+                fanzhong[2] = j;
+                return;
+            }
+        }
+        for (int i = 0; i < 3; ++i) {
+            yiyou = 0;
+            yiyou += shunzi_paishu(i, j + 1);
+            yiyou += shunzi_paishu((i + 1) % 3, j);
+            yiyou += shunzi_paishu((i + 2) % 3, j - 1);
+            if (yiyou >= sanbugao) {
+                fanzhong[0] = 5;
+                fanzhong[1] = i + 3;
+                fanzhong[2] = j;
+                return;
+            }
+        }
+    }
+}
+
 
 void canmingpai() {
     int l, r;
