@@ -3,7 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-
+#include "MahjongGB/MahjongGB.h"
+#include <utility>
 
 using namespace std;
 
@@ -251,6 +252,8 @@ void del_remain(string stmp, int n){
     }
 }
 
+int hua_num;
+
 int main()
 {
     for (int i = 1; i<28; i++) {
@@ -262,7 +265,7 @@ int main()
     for (int i = 1; i<4; i++) {
         jian_remain[i] = 4;
     }
-    
+    hua_num = 0;
     
     int turnID;
     string stmp;
@@ -275,11 +278,12 @@ int main()
         request.push_back(stmp);
         getline(cin, stmp);
         response.push_back(stmp);
-    }
+    } //保存之前的信息，之后做处理
+    
     getline(cin, stmp);
     request.push_back(stmp);
 
-    if(turnID < 2) { // round 1
+    if(turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
     }
     else {
@@ -327,6 +331,13 @@ int main()
                     else{
                         del_remain(stmp, 1);
                     }
+                }
+                else if (op == "BUHUA"){ // 补花
+                    sin >> stmp;
+                    if (now_id==myPlayerID) {
+                        hand.erase(find(hand.begin(), hand.end(), stmp));
+                    }
+                    hua_num += 1;
                 }
                 else if (op == "PENG"){
                     sin >> stmp;
@@ -447,6 +458,17 @@ int main()
                         }
                     }
                 }
+                else if (op == "BUGANG"){
+                    sin >> stmp;
+                    if (now_id==myPlayerID) {
+                        hand.erase(find(hand.begin(), hand.end(), stmp));
+                        ke_zi.erase(find(ke_zi.begin(), ke_zi.end(), stmp));
+                        gang_zi.push_back(stmp);
+                    }
+                    else {
+                        del_remain(stmp, 1);
+                    }
+                }
             }
         }// 结束更新手牌
         
@@ -485,9 +507,56 @@ int main()
         sin.str(request[turnID]);
         sin >> itmp;
         
+        // 算一下番
+        /*
+        pack:玩家的明牌，每组第一个string为"PENG" "GANG" "CHI" 三者之一，第二个- string为牌代码（吃牌表示中间牌代码），第三个int碰、杠时表示上家、对家、下家供牌，吃时123表示第几张是上家供牌。
+        hand:玩家的暗牌，string为牌代码
+        winTile:和的那张牌代码
+        flowerCount:补花数
+        isZIMO:是否为自摸和牌
+        isJUEZHANG:是否为和绝张
+        isGANG:关于杠，复合点和时为枪杠和，复合自摸则为杠上开花
+        isLast:是否为牌墙最后一张，复合自摸为妙手回春，否则为海底捞月
+        menFeng:门风，0123表示东南西北
+        quanFeng:圈风，0123表示东南西北
+        */
+        vector<pair<string, pair<string, int> > > pack;
+        MahjongInit();
+        pair<string, pair<string, int> > p = {"GANG",{"W1",1}};
+        pack.push_back(p);
+        string winTile;
+        int flowerCount;
+        int isZIMO;
+        int isJUEZHANG;
+        int isGANG; //这里还需要做判断
+        int isLast;
+        int menFeng = myPlayerID;
+        int quanFeng = quan;
+        
+        int sum_fan = 0;
+        int can_hu = 0;
+        try{
+            auto re = MahjongFanCalculator(pack,hand,winTile,flowerCount,isZIMO,isJUEZHANG,isGANG,isLast,menFeng,quanFeng);
+            for(auto i : re){
+                sum_fan += i.first;
+            }
+            if ((sum_fan-hua_num)>=8) {
+                can_hu = 1;
+            }
+        }
+        catch(const string &error){
+            can_hu = 0;
+        }
+        if (can_hu = 1) {
+            sout << "HU";
+            response.push_back(sout.str());
+            return 0;
+        }
+        
+        
         bool will_pass = 1; // 本轮操作是否输出pass
         
-        if(itmp == 2) { // 如果当前轮是自己摸牌
+        if(itmp == 2) { // 如果当前轮是自己摸牌,则随机出牌
             random_shuffle(hand.begin(), hand.end());
             sout << "PLAY " << *hand.rbegin();
             hand.pop_back();
@@ -499,7 +568,7 @@ int main()
                 sin >> stmp;
                 if (stmp=="PLAY" || stmp=="PENG") {
                     sin >> stmp;
-                    
+                    //在此加入是否进行下一步操作
                 }
                 else if (stmp == "CHI"){
                     sin >> stmp >> stmp;
@@ -514,6 +583,6 @@ int main()
         response.push_back(sout.str());
     }
 
-    cout << response[turnID] << endl;
+    //cout << response[turnID] << endl;
     return 0;
 }
