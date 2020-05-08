@@ -747,7 +747,7 @@ int main()
         catch(const string &error){
             can_hu = 0;
         }
-        if (can_hu = 1) {
+        if (can_hu == 1) {
             sout << "HU";
             response.push_back(sout.str());
             return 0;
