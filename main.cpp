@@ -647,70 +647,17 @@ string quanzhongzuixiao(string a) {
 
 int hua_num;
 
-void HU() {
-    if (hand.size == 2) {
-        if (hand.front == hand.back)return 1;
-        else return 0;
-    }
-    else
-        return 0;
-}
+//void HU() {
+//    if (hand.size == 2) {
+//        if (hand.front == hand.back)return 1;
+//        else return 0;
+//    }
+//    else
+//        return 0;
+//}
 /*if (HU) {
     request.push_pack("HU")
 }*/
-
-void quanzhongzuixiao(string a) {
-    int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
-    int shu_temp = shu_quan[1], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
-    char kind, num;
-    for (int i = 2; i < 28; i++) {
-        if (shu_quan[i] < shu_temp) {//>=使得权重相同时，先打序号大的牌
-            shu_temp = shu_quan[i];
-            shu_min = i;
-        }
-    }
-    for (int i = 2; i < 4; i++) {
-        if (feng_quan[i] <= feng_temp) {
-            feng_temp = feng_quan[i];
-            feng_min = i;
-        }
-    }
-    for (int i = 2; i < 3; i++) {
-        if (jian_quan[i] <= jian_temp) {
-            jian_temp = jian_quan[i];
-            jian_min = i;
-        }
-    }
-    if (shu_temp <= feng_temp) {//权重相同，优先出数牌
-        if (shu_temp <= jian_temp) {
-            if ((shu_min - 1) / 9 == 0) {
-                kind = 'B';
-            }
-            else if ((shu_min - 1) / 9 == 1) {
-                kind = 'T';
-            }
-            else
-                kind = 'W';
-            num = (char)shu_min;
-        }
-        else {
-            kind = 'J';
-            num = (char)jian_min;
-        }
-    }
-    else if (feng_temp < jian_temp) {
-        kind = 'F';
-        num = (char)feng_min;
-    }
-    else {
-        kind = 'J';
-        num = (char)jian_min;
-    }
-    a = kind + num;
-    return a;
-}
-
-int hua_num;
 
 int main()
 {
