@@ -56,6 +56,7 @@ void jiaquan(int i, int j){//当数牌只有一张时，增加1000权重
 
 
 void dingfan() {
+    int yiyou;
     //计算对子数和各花色牌数
     for (int i = 0; i < 3; ++i) {
         for (int j = 1; j <= 9; ++j) {
@@ -84,7 +85,6 @@ void dingfan() {
     //判断碰碰胡，三个以上对子
     if (total_duizi >= 3) {
         fanzhong[0] = 1;
-
         for (int i = 0; i < 3; ++i) {
             for (int j = 1; j <= 9; ++j) {
                 if (shu[i * 9 + j] >= 2) {
@@ -103,13 +103,24 @@ void dingfan() {
                 jian_quan_[i] += 1000;
             }
         }
-
         return;
     }
-    //判断五门齐，风箭各一对
-    if (duizi[3] >= 1 && duizi[4] >= 1) {
+    //判断五门齐，风箭各一对,数牌至少有两种有一对或能吃
+    yiyou = 0;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 1; j <= 9; ++j) {
+            if (shu[i * 9 + j] >= 2) {
+                ++yiyou;
+                break;
+            }
+            else if (j > 1 && j < 9 && shunzi_paishu(i, j) >= 2) {
+                ++yiyou;
+                break;
+            }
+        }
+    }
+    if (yiyou >= 2 && duizi[3] >= 1 && duizi[4] >= 1) {
         fanzhong[0] = 2;
-
         for (int i = 1; i <= 4; ++i) {
             if (feng[i] >= 2) {
                 feng_quan_[i] += 1000;
@@ -122,7 +133,6 @@ void dingfan() {
                 break;
             }
         }
-
         return;
     }
     //判断混一色，某一色数牌和字牌共9张以上
@@ -130,17 +140,30 @@ void dingfan() {
         if (paizhong[i] >= (9 - paizhong[3] - paizhong[4])) {
             fanzhong[0] = 3;
             fanzhong[1] = i;
-
             for (int j = 1; j <= 9; ++j) {
                 shu_quan_[i * 9 + j][0] += 1000;
                 shu_quan_[i * 9 + j][1] += 1000;
             }
-
+            for (int i = 1; i <= 4; ++i) {
+                if (feng[i] >= 2) {
+                    feng_quan_[i] += 1000;
+                }
+                else {
+                    feng_quan_[i] += 500;
+                }
+            }
+            for (int i = 1; i <= 3; ++i) {
+                if (jian[i] >= 2) {
+                    jian_quan_[i] += 1000;
+                }
+                else {
+                    jian_quan_[i] += 500;
+                }
+            }
             return;
         }
     }
 
-    int yiyou;
     //判断清龙，9张需有7张
     int qinglong = 7;
     for (int i = 0; i < 3; ++i) {
@@ -151,7 +174,6 @@ void dingfan() {
         if (yiyou >= qinglong) {
             fanzhong[0] = 4;
             fanzhong[1] = i;
-
             for (int j = 1; j <= 9; ++j) {
                 jiaquan(i, j);
             }
@@ -173,7 +195,6 @@ void dingfan() {
                 jiaquan((i + 1) % 3, m + 3);
                 jiaquan((i + 2) % 3, m + 6);
             }
-
             return;
         }
         yiyou = 0;
@@ -188,7 +209,6 @@ void dingfan() {
                 jiaquan((i + 1) % 3, m + 3);
                 jiaquan((i + 2) % 3, m);
             }
-
             return;
         }
     }
@@ -207,7 +227,6 @@ void dingfan() {
                 jiaquan(i, j);
                 jiaquan(i, j + 1);
             }
-
             return;
         }
     }
@@ -228,7 +247,6 @@ void dingfan() {
                     jiaquan((i + 1) % 3, m);
                     jiaquan((i + 2) % 3, m + 1);
                 }
-
                 return;
             }
         }
@@ -246,7 +264,6 @@ void dingfan() {
                     jiaquan((i + 1) % 3, m);
                     jiaquan((i + 2) % 3, m - 1);
                 }
-
                 return;
             }
         }
