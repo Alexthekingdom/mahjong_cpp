@@ -22,7 +22,7 @@ int shu_ting[28][6] = { 0 }, feng_ting[5] = { 0 }, jian_ting[4] = { 0};
 int shu_quan[28][6] = { 0 }, feng_quan[5] = { 0 }, jian_quan[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表该牌的鸣牌时的权重
 //数牌的6个数分别表示总权重，碰或杠的权重，连续吃在左权重，连续吃在右权重，分开吃在左权重，分开吃在右权重
 //eg.如手牌同时有2345万，4万连续吃在左权重即为45万吃的权重，为3万和6万剩余牌数量和，连续吃在右权重即34万吃，分开吃在右权重即24万吃
-int shu_quan_[28] = { 0 }, feng_quan_[5] = { 0 }, jian_quan_[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表该牌本身的权重，仅用于散牌判断出牌顺序
+int shu_quan_[28][2] = { 0 }, feng_quan_[5] = { 0 }, jian_quan_[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表最终权重，其中数牌分别是鸣牌权重和牌使用一张的损失权重
 
 int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 };//对子数和各种牌数，顺序为饼条万风箭
 //番种三个值分别代表番种类型，牌型，牌大小
@@ -31,29 +31,6 @@ int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 };
 
 //牌大小用于三色三步高和三色三同顺，其值为三步高中间顺子的中间牌数字，三同顺代表顺子中间牌数字
 
-void paiquanzhong() {
-    int sanpai = 10, weizhi = 1, type = 0;//权重值的数值，方便之后增加调整权重的内容，type是采用的鸣牌权重类型，此处是鸣牌总权重
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 1; j <= 9; ++j) {
-            shu_quan_[i * 9 + j] += shu_quan[i * 9 + j][type] * sanpai;
-            if (j == 1 || j == 9) {
-                shu_quan_[i * 9 + j] += 1;
-            }
-            else if (j == 2 || j == 8) {
-                shu_quan_[i * 9 + j] += 2;
-            }
-            else {
-                shu_quan_[i * 9 + j] += 3;
-            }
-        }
-    }
-    for (int i = 1; i <= 4; ++i) {
-        feng_quan_[i] += feng_quan[i];
-    }
-    for (int i = 1; i <= 3; ++i) {
-        jian_quan_[i] += jian_quan[i];
-    }
-}
 
 int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i为牌种，j为数字，表示顺子中间的牌，返回该顺子中已有的牌数
     int n = 0;
@@ -123,7 +100,7 @@ void dingfan() {
         }
         for (int i = 1; i <= 3; ++i) {
             if (jian[i] >= 2) {
-                feng_quan_[i] += 1000;
+                jian_quan_[i] += 1000;
             }
         }
 
@@ -141,7 +118,7 @@ void dingfan() {
         }
         for (int i = 1; i <= 3; ++i) {
             if (jian[i] >= 2) {
-                feng_quan_[i] += 1000;
+                jian_quan_[i] += 1000;
                 break;
             }
         }
@@ -274,6 +251,111 @@ void dingfan() {
             }
         }
     }
+}
+
+int maxquan(int n, int k) {//返回第k大的吃权重，k为1-4
+    int num[5];
+    for (int i = 0; i < 4; ++i) {
+        num[i] = shu_quan[n][i + 2];
+    }
+    sort(num, num + 4);
+    return num[4 - k];
+}
+
+void paiquanzhong() {
+    int paishu, max_quan;
+    for (int i = 0; i < 3; ++i) {
+
+        for (int j = 1; j <= 9; ++j) {
+            if (shu_quan[i * 9 + j][0] == 0 || shu[i * 9 + j] == 0) {//没牌或权重都为0，只考虑牌本身权重
+                shu_quan_[i * 9 + j][0] = 0;
+                if (j == 1 || j == 9) {
+                    shu_quan_[i * 9 + j][0] += 1;
+                    shu_quan_[i * 9 + j][1] += 1;
+                }
+                else if (j == 2 || j == 8) {
+                    shu_quan_[i * 9 + j][0] += 2;
+                    shu_quan_[i * 9 + j][1] += 2;
+                }
+                else {
+                    shu_quan_[i * 9 + j][0] += 3;
+                    shu_quan_[i * 9 + j][1] += 3;
+                }
+                continue;
+            }
+            if (shu[i * 9 + j] == 1) {//只有一张牌，只能吃一次，选权重最大的吃
+                shu_quan_[i * 9 + j][0] = maxquan(i * 9 + j, 1) * 10;
+                shu_quan_[i * 9 + j][1] = maxquan(i * 9 + j, 1) * 10;
+            }
+            else if (shu[i * 9 + j] == 2) {//两张牌，可碰或吃两次
+                if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2))) {//碰的权重大，鸣牌权重同碰，用牌损失碰-单个吃
+                    shu_quan_[i * 9 + j][0] = shu_quan[i * 9 + j][1] * 10;
+                    shu_quan_[i * 9 + j][1] = (shu_quan[i * 9 + j][1] - maxquan(i * 9 + j, 1)) * 10;
+                }
+                else if (shu_quan[i * 9 + j][1] <= (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2))) {//吃的权重大，鸣牌权重同吃，同时判断是单张吃还是两张都吃，二者权重相等按吃的权重大算
+                    if (maxquan(i * 9 + j, 2) == 0) {//如果是单张吃,鸣牌权重同最大吃，用牌不损失权重
+                        shu_quan_[i * 9 + j][0] = maxquan(i * 9 + j, 1) * 10;
+                        shu_quan_[i * 9 + j][1] = 0;
+                    }
+                    else {//如果是两张吃，鸣牌权重为二者和，用牌损失第二高权重的吃
+                        shu_quan_[i * 9 + j][0] = (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2)) * 10;
+                        shu_quan_[i * 9 + j][1] = maxquan(i * 9 + j, 2);
+                    }
+                }
+            }
+            else if (shu[i * 9 + j] == 3) {//三张牌，可碰加吃或三张吃，其他情况的权重绝不会比这两种大，不讨论
+                if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 2) + maxquan(i * 9 + j, 3))) {//碰加吃的权重大，此处两边都有最大权重的吃，因此不计算
+                    if (maxquan(i * 9 + j, 1) == 0) {//没有能吃的，鸣牌权重等于碰，且用牌不损失
+                        shu_quan_[i * 9 + j][0] = (shu_quan[i * 9 + j][1] + maxquan(i * 9 + j, 1)) * 10;
+                        shu_quan_[i * 9 + j][1] = 0;
+                    }
+                    else {//有能吃的，鸣牌权重等于碰加吃，用牌权重是鸣牌权重减去两个吃和碰里较大的
+                        shu_quan_[i * 9 + j][0] = shu_quan[i * 9 + j][1] * 10;
+                        if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2))) {//碰的权重更大
+                            shu_quan_[i * 9 + j][1] = shu_quan_[i * 9 + j][0] - shu_quan[i * 9 + j][1] * 10;
+                        }
+                        else {//两个吃权重更大
+                            shu_quan_[i * 9 + j][1] = shu_quan_[i * 9 + j][0] - (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2)) * 10;
+                        }
+                    }
+                }
+                else {//三个吃的权重大，鸣牌权重为三者和，根据吃的实际数量算用牌权重
+                    shu_quan_[i * 9 + j][0] = (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2) + maxquan(i * 9 + j, 3)) * 10;
+                    if (maxquan(i * 9 + j, 3) == 0) {//如果只用两张或更少吃，用牌不损失权重
+                        shu_quan_[i * 9 + j][1] = 0;
+                    }
+                    else {//如果三张吃，用牌损失第三大的吃权重
+                        shu_quan_[i * 9 + j][1] = maxquan(i * 9 + j, 3) * 10;
+                    }
+                }
+            }
+            if (j == 1 || j == 9) {//加上牌本身的权重
+                shu_quan_[i * 9 + j][0] += 1;
+                shu_quan_[i * 9 + j][1] += 1;
+            }
+            else if (j == 2 || j == 8) {
+                shu_quan_[i * 9 + j][0] += 2;
+                shu_quan_[i * 9 + j][1] += 2;
+            }
+            else {
+                shu_quan_[i * 9 + j][0] += 3;
+                shu_quan_[i * 9 + j][1] += 3;
+            }
+        }
+    }
+
+    for (int i = 1; i <= 4; ++i) {
+
+        feng_quan_[i] += feng_quan[i] * 10;
+
+    }
+
+    for (int i = 1; i <= 3; ++i) {
+
+        jian_quan_[i] += jian_quan[i] * 10;
+
+    }
+
 }
 
 
