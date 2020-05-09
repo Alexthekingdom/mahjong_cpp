@@ -800,6 +800,8 @@ int main()
             }
         }
         canmingpai();
+        paiquanzhong();
+        dingfan();
         
         // 进行当前轮操作
         sin.clear();
