@@ -47,12 +47,15 @@ int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i�
 }
 
 
+
 void jiaquan(int i, int j) {//当数牌只有一张时，增加1000权重
+
     if (shu[i * 9 + j] == 1) {
         shu_quan_[i * 9 + j][0] += 1000;
         shu_quan_[i * 9 + j][1] += 1000;
     }
 }
+
 
 void jiaquan2(int i, int j) {//当数牌只有一张时，增加1000权重
     if (shu[i * 9 + j] == 1) {
@@ -60,6 +63,7 @@ void jiaquan2(int i, int j) {//当数牌只有一张时，增加1000权重
         shu_quan_[i * 9 + j][1] += 100;
     }
 }
+
 
 
 void dingfan() {
@@ -88,8 +92,10 @@ void dingfan() {
             ++duizi[4];
         }
     }
+
     //判断碰碰胡，三个以上对子
     if (total_duizi >= 4) {
+
         fanzhong[0] = 1;
         for (int i = 0; i < 3; ++i) {
             for (int j = 1; j <= 9; ++j) {
@@ -111,6 +117,7 @@ void dingfan() {
         }
         return;
     }
+
     if (total_duizi == 3) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 1; j <= 9; ++j) {
@@ -131,6 +138,7 @@ void dingfan() {
             }
         }
     }
+
     //判断五门齐，风箭各一对,数牌至少有两种有一对或能吃
     yiyou = 0;
     for (int i = 0; i < 3; ++i) {
@@ -161,9 +169,11 @@ void dingfan() {
         }
         return;
     }
+
     //判断混一色，某一色数牌和字牌共10张以上
     for (int i = 0; i < 3; ++i) {
         if (paizhong[i] >= (10 - paizhong[3] - paizhong[4])) {
+
             fanzhong[0] = 3;
             fanzhong[1] = i;
             for (int j = 1; j <= 9; ++j) {
@@ -205,11 +215,13 @@ void dingfan() {
             }
             return;
         }
+
         if (yiyou == 6) {
             for (int j = 1; j <= 9; ++j) {
                 jiaquan2(i, j);
             }
         }
+
     }
     //判断花龙，9张需有7张
     int hualong = 7;
@@ -228,6 +240,7 @@ void dingfan() {
             }
             return;
         }
+
         if (yiyou == 6) {
             for (int m = 1; m <= 3; ++m) {
                 jiaquan2(i, m);
@@ -235,6 +248,7 @@ void dingfan() {
                 jiaquan2((i + 2) % 3, m + 6);
             }
         }
+
         yiyou = 0;
         yiyou += shunzi_paishu(i, 8);
         yiyou += shunzi_paishu((i + 1) % 3, 5);
@@ -249,6 +263,7 @@ void dingfan() {
             }
             return;
         }
+
         if (yiyou == 6) {
             for (int m = 1; m <= 3; ++m) {
                 jiaquan2(i, m + 6);
@@ -256,13 +271,16 @@ void dingfan() {
                 jiaquan2((i + 2) % 3, m);
             }
         }
+
     }
     //判断三色三同顺，9张需有7张
     int santongshun = 7;
     for (int j = 2; j <= 8; ++j) {
         yiyou = 0;
         for (int i = 0; i < 3; ++i) {
+
             yiyou += shunzi_paishu(i, j);
+
         }
         if (yiyou >= santongshun) {
             fanzhong[0] = 6;
@@ -274,6 +292,7 @@ void dingfan() {
             }
             return;
         }
+
         if (yiyou == 6) {
             for (int i = 0; i < 3; ++i) {
                 jiaquan2(i, j - 1);
@@ -281,6 +300,7 @@ void dingfan() {
                 jiaquan2(i, j + 1);
             }
         }
+
     }
     //判断三色三步高，9张需有7张
     int sanbugao = 7;
@@ -301,6 +321,7 @@ void dingfan() {
                 }
                 return;
             }
+
             if (yiyou == 6) {
                 for (int m = j - 1; m <= j + 1; ++m) {
                     jiaquan2(i, m - 1);
@@ -308,6 +329,7 @@ void dingfan() {
                     jiaquan2((i + 2) % 3, m + 1);
                 }
             }
+
         }
         for (int i = 0; i < 3; ++i) {
             yiyou = 0;
@@ -325,6 +347,7 @@ void dingfan() {
                 }
                 return;
             }
+
             if (yiyou == 6) {
                 for (int m = j - 1; m <= j + 1; ++m) {
                     jiaquan2(i, m + 1);
@@ -332,6 +355,7 @@ void dingfan() {
                     jiaquan2((i + 2) % 3, m - 1);
                 }
             }
+
         }
     }
 }
@@ -506,9 +530,11 @@ void canmingpai() {
     //计算风牌和箭牌的鸣牌情况
     for (int i = 1; i <= 4; ++i) {
         if (feng[i] > 1) {
+
             feng_ting[i] = 1;
             if (feng[i] > 2) {
                 feng_ting[i] = 1;
+
             }
             feng_quan[i] += feng_remain[i];
             feng_quan[i] += feng_remain[i];
@@ -516,9 +542,11 @@ void canmingpai() {
     }
     for (int i = 1; i <= 3; ++i) {
         if (jian[i] > 1) {
+
             jian_ting[i] = 1;
             if (jian[i] > 2) {
                 jian_ting[i] = 1;
+
             }
             jian_quan[i] += jian_remain[i];
             jian_quan[i] += jian_remain[i];
@@ -619,6 +647,71 @@ string quanzhongzuixiao(string a) {
 
 int hua_num;
 
+void HU() {
+    if (hand.size == 2) {
+        if (hand.front == hand.back)return 1;
+        else return 0;
+    }
+    else
+        return 0;
+}
+/*if (HU) {
+    request.push_pack("HU")
+}*/
+
+void quanzhongzuixiao(string a) {
+    int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
+    int shu_temp = shu_quan[1], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
+    char kind, num;
+    for (int i = 2; i < 28; i++) {
+        if (shu_quan[i] < shu_temp) {//>=使得权重相同时，先打序号大的牌
+            shu_temp = shu_quan[i];
+            shu_min = i;
+        }
+    }
+    for (int i = 2; i < 4; i++) {
+        if (feng_quan[i] <= feng_temp) {
+            feng_temp = feng_quan[i];
+            feng_min = i;
+        }
+    }
+    for (int i = 2; i < 3; i++) {
+        if (jian_quan[i] <= jian_temp) {
+            jian_temp = jian_quan[i];
+            jian_min = i;
+        }
+    }
+    if (shu_temp <= feng_temp) {//权重相同，优先出数牌
+        if (shu_temp <= jian_temp) {
+            if ((shu_min - 1) / 9 == 0) {
+                kind = 'B';
+            }
+            else if ((shu_min - 1) / 9 == 1) {
+                kind = 'T';
+            }
+            else
+                kind = 'W';
+            num = (char)shu_min;
+        }
+        else {
+            kind = 'J';
+            num = (char)jian_min;
+        }
+    }
+    else if (feng_temp < jian_temp) {
+        kind = 'F';
+        num = (char)feng_min;
+    }
+    else {
+        kind = 'J';
+        num = (char)jian_min;
+    }
+    a = kind + num;
+    return a;
+}
+
+int hua_num;
+
 int main()
 {
     for (int i = 1; i < 28; i++) {
@@ -649,6 +742,7 @@ int main()
     request.push_back(stmp);
 
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
+
         response.push_back("PASS");
     }
     else {
@@ -697,14 +791,18 @@ int main()
                         del_remain(stmp, 1);
                     }
                 }
+
                 else if (op == "BUHUA") { // 补花
                     sin >> stmp;
                     if (now_id == myPlayerID) {
+
                         hand.erase(find(hand.begin(), hand.end(), stmp));
                     }
                     hua_num += 1;
                 }
+
                 else if (op == "PENG") {
+
                     sin >> stmp;
                     if (now_id == myPlayerID) { // 先清除打出去的牌
                         hand.erase(find(hand.begin(), hand.end(), stmp));
@@ -826,6 +924,7 @@ int main()
                 else if (op == "BUGANG") {
                     sin >> stmp;
                     if (now_id == myPlayerID) {
+
                         hand.erase(find(hand.begin(), hand.end(), stmp));
                         ke_zi.erase(find(ke_zi.begin(), ke_zi.end(), stmp));
                         gang_zi.push_back(stmp);
@@ -912,6 +1011,7 @@ int main()
             }
         }
         catch (const string & error) {
+
             can_hu = 0;
         }
         if (can_hu == 1) {
@@ -920,9 +1020,7 @@ int main()
             return 0;
         }
 
-
         bool will_pass = 1; // 本轮操作是否输出pass
-
         if (itmp == 2) { // 如果当前轮是自己摸牌,则随机出牌
             random_shuffle(hand.begin(), hand.end());
             sout << "PLAY " << *hand.rbegin();
