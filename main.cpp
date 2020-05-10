@@ -647,19 +647,20 @@ string quanzhongzuixiao(string &a) {
 
 int hua_num;
 
-/*void HU() {
-    if (hand.size == 2) {
-        if (hand.front == hand.back)return 1;
-        else return 0;
-    }
-    else
-        return 0;
-}
+
+//void HU() {
+//    if (hand.size == 2) {
+//        if (hand.front == hand.back)return 1;
+//        else return 0;
+//    }
+//    else
+//        return 0;
+//}
+
 /*if (HU) {
     request.push_pack("HU")
 }*/
 
-int hua_num;
 
 int main()
 {
