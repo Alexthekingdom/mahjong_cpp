@@ -594,7 +594,7 @@ void del_remain(string stmp, int n) {
     request.push_pack("HU")
 }*/
 
-string quanzhongzuixiao(string a) {
+string quanzhongzuixiao(string &a) {
     int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
     int shu_temp = shu_quan[1][0], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
     char kind, num;
@@ -647,7 +647,7 @@ string quanzhongzuixiao(string a) {
 
 int hua_num;
 
-void HU() {
+/*void HU() {
     if (hand.size == 2) {
         if (hand.front == hand.back)return 1;
         else return 0;
@@ -658,57 +658,6 @@ void HU() {
 /*if (HU) {
     request.push_pack("HU")
 }*/
-
-void quanzhongzuixiao(string a) {
-    int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
-    int shu_temp = shu_quan[1], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
-    char kind, num;
-    for (int i = 2; i < 28; i++) {
-        if (shu_quan[i] < shu_temp) {//>=使得权重相同时，先打序号大的牌
-            shu_temp = shu_quan[i];
-            shu_min = i;
-        }
-    }
-    for (int i = 2; i < 4; i++) {
-        if (feng_quan[i] <= feng_temp) {
-            feng_temp = feng_quan[i];
-            feng_min = i;
-        }
-    }
-    for (int i = 2; i < 3; i++) {
-        if (jian_quan[i] <= jian_temp) {
-            jian_temp = jian_quan[i];
-            jian_min = i;
-        }
-    }
-    if (shu_temp <= feng_temp) {//权重相同，优先出数牌
-        if (shu_temp <= jian_temp) {
-            if ((shu_min - 1) / 9 == 0) {
-                kind = 'B';
-            }
-            else if ((shu_min - 1) / 9 == 1) {
-                kind = 'T';
-            }
-            else
-                kind = 'W';
-            num = (char)shu_min;
-        }
-        else {
-            kind = 'J';
-            num = (char)jian_min;
-        }
-    }
-    else if (feng_temp < jian_temp) {
-        kind = 'F';
-        num = (char)feng_min;
-    }
-    else {
-        kind = 'J';
-        num = (char)jian_min;
-    }
-    a = kind + num;
-    return a;
-}
 
 int hua_num;
 
@@ -764,6 +713,7 @@ int main()
             hand.push_back(stmp);
         }
 
+        string chupai;
         // 之后的每轮，需要根据request判断自己手牌变化情况，以及当前场面剩余牌的形势
         for (int i = 2; i < turnID; i++) {
             sin.clear();
@@ -774,6 +724,9 @@ int main()
                 hand.push_back(stmp);
                 del_remain(stmp, 1);
                 sin.clear();
+                sout << quanzhongzuixiao(chupai);
+                response.push_back(sout.str());
+                hand.erase(find(hand.begin(), hand.end(), chupai));//从手牌中删除打出的牌
             }
             else if (itmp == 3) { // 如果是其他情况
                 int now_id;
@@ -806,6 +759,9 @@ int main()
                     sin >> stmp;
                     if (now_id == myPlayerID) { // 先清除打出去的牌
                         hand.erase(find(hand.begin(), hand.end(), stmp));
+                        sout << quanzhongzuixiao(chupai);
+                        response.push_back(sout.str());
+                        hand.erase(find(hand.begin(), hand.end(), chupai));//从手牌中删除打出的牌
                     }
                     else {
                         del_remain(stmp, 1);
@@ -833,6 +789,7 @@ int main()
                         del_remain(stmp, 2);
                     }
 
+
                 }
                 else if (op == "CHI") {
                     sin.clear();
@@ -847,6 +804,9 @@ int main()
 
                     if (now_id == myPlayerID) { //先加上吃的是哪张牌，后续再删掉或打出
                         hand.push_back(stmp);
+                        sout << quanzhongzuixiao(chupai);
+                        response.push_back(sout.str());
+                        hand.erase(find(hand.begin(), hand.end(), chupai));//从手牌中删除打出的牌
                     }
                     else {
                         del_remain(stmp, -1);
@@ -900,6 +860,7 @@ int main()
                                 sin >> stmp;
                             }
                         }
+
                         gang_zi.push_back(stmp);
                         // GANG有3张，都从手里删掉
                         hand.erase(find(hand.begin(), hand.end(), stmp));
@@ -928,6 +889,9 @@ int main()
                         hand.erase(find(hand.begin(), hand.end(), stmp));
                         ke_zi.erase(find(ke_zi.begin(), ke_zi.end(), stmp));
                         gang_zi.push_back(stmp);
+                        sout << quanzhongzuixiao(chupai);
+                        response.push_back(sout.str());
+                        hand.erase(find(hand.begin(), hand.end(), chupai));//从手牌中删除打出的牌
                     }
                     else {
                         del_remain(stmp, 1);
