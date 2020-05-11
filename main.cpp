@@ -57,7 +57,7 @@ void jiaquan(int i, int j) {//当数牌只有一张时，增加1000权重
 }
 
 
-void jiaquan2(int i, int j) {//当数牌只有一张时，增加1000权重
+void jiaquan2(int i, int j) {//当数牌只有一张时，增加100权重,用于次等定番加权
     if (shu[i * 9 + j] == 1) {
         shu_quan_[i * 9 + j][0] += 100;
         shu_quan_[i * 9 + j][1] += 100;
@@ -582,39 +582,30 @@ void del_remain(string stmp, int n) {
     }
 }
 
-/*void HU() {
-    if (hand.size == 2) {
-        if (hand.front == hand.back)return 1;
-        else return 0;
-    }
-    else
-        return 0;
-}
-/*if (HU) {
-    request.push_pack("HU")
-}*/
-
 string quanzhongzuixiao(string &a) {
     int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
-    int shu_temp = shu_quan[1][0], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
+    int shu_temp = 0, feng_temp = 0, jian_temp = 0;//最小值
     char kind, num;
-    for (int i = 2; i < 28; i++) {
+    for (int i = 1; i < 28; i++) {
+        if(shu[i]!=0){
         if (shu_quan[i][0] < shu_temp) {//>=使得权重相同时，先打序号大的牌
             shu_temp = shu_quan[i][0];
             shu_min = i;
-        }
+        }}
     }
-    for (int i = 2; i < 4; i++) {
+    for (int i = 1; i < 4; i++) {
+        if(feng[i]!=0){
         if (feng_quan[i] <= feng_temp) {
             feng_temp = feng_quan[i];
             feng_min = i;
-        }
+        }}
     }
-    for (int i = 2; i < 3; i++) {
+    for (int i = 1; i < 3; i++) {
+        if(jian[i]!=0){
         if (jian_quan[i] <= jian_temp) {
             jian_temp = jian_quan[i];
             jian_min = i;
-        }
+        }}
     }
     if (shu_temp <= feng_temp) {//权重相同，优先出数牌
         if (shu_temp <= jian_temp) {
@@ -646,21 +637,6 @@ string quanzhongzuixiao(string &a) {
 }
 
 int hua_num;
-
-
-//void HU() {
-//    if (hand.size == 2) {
-//        if (hand.front == hand.back)return 1;
-//        else return 0;
-//    }
-//    else
-//        return 0;
-//}
-
-/*if (HU) {
-    request.push_pack("HU")
-}*/
-
 
 int main()
 {
@@ -744,15 +720,6 @@ int main()
                     else {
                         del_remain(stmp, 1);
                     }
-                }
-
-                else if (op == "BUHUA") { // 补花
-                    sin >> stmp;
-                    if (now_id == myPlayerID) {
-
-                        hand.erase(find(hand.begin(), hand.end(), stmp));
-                    }
-                    hua_num += 1;
                 }
 
                 else if (op == "PENG") {
