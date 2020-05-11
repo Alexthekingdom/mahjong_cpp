@@ -582,18 +582,6 @@ void del_remain(string stmp, int n) {
     }
 }
 
-/*void HU() {
-    if (hand.size == 2) {
-        if (hand.front == hand.back)return 1;
-        else return 0;
-    }
-    else
-        return 0;
-}
-/*if (HU) {
-    request.push_pack("HU")
-}*/
-
 string quanzhongzuixiao(string &a) {
     int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
     int shu_temp = shu_quan[1][0], feng_temp = feng_quan[1], jian_temp = jian_quan[1];//最小值
@@ -646,21 +634,6 @@ string quanzhongzuixiao(string &a) {
 }
 
 int hua_num;
-
-
-//void HU() {
-//    if (hand.size == 2) {
-//        if (hand.front == hand.back)return 1;
-//        else return 0;
-//    }
-//    else
-//        return 0;
-//}
-
-/*if (HU) {
-    request.push_pack("HU")
-}*/
-
 
 int main()
 {
@@ -744,15 +717,6 @@ int main()
                     else {
                         del_remain(stmp, 1);
                     }
-                }
-
-                else if (op == "BUHUA") { // 补花
-                    sin >> stmp;
-                    if (now_id == myPlayerID) {
-
-                        hand.erase(find(hand.begin(), hand.end(), stmp));
-                    }
-                    hua_num += 1;
                 }
 
                 else if (op == "PENG") {
