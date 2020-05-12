@@ -839,7 +839,7 @@ void caozuopanduan(string s, int op, string shuchu) {
 
     else {
         for (int i = 0; i < 3; i++) {//判断是不是需要的顺子
-            if (huase == fan_shunzi[i][0]) {
+            if (huase == fan_shunzi[i][0] && yiming_flag[i] == 0) {
                 if (num == fan_shunzi[i][0]) {
                     if (shu[huase * 9 + num - 1] >= 1 && shu[huase * 9 + num + 1] >= 1) {
                         op = 3;
