@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"
 #include <utility>
 
 using namespace std;
@@ -932,7 +932,8 @@ void del_remain(string stmp, int n) {
 void quanzhongzuixiao(string& a) {
     int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
     int shu_temp = 0, feng_temp = 0, jian_temp = 0;//最小值
-    char kind, num;
+    char kind;
+    int num = 999;
     for (int i = 1; i < 28; i++) {
         if (shu[i] != 0) {
             if (shu_quan_[i][0] < shu_temp) {//>=使得权重相同时，先打序号大的牌
@@ -957,6 +958,7 @@ void quanzhongzuixiao(string& a) {
             }
         }
     }
+    
     if (shu_temp <= feng_temp) {//权重相同，优先出数牌
         if (shu_temp <= jian_temp) {
             if ((shu_min - 1) / 9 == 0) {
@@ -971,18 +973,19 @@ void quanzhongzuixiao(string& a) {
         }
         else {
             kind = 'J';
-            num = (char)jian_min;
+            num = jian_min;
         }
     }
     else if (feng_temp < jian_temp) {
         kind = 'F';
-        num = (char)feng_min;
+        num = feng_min;
     }
     else {
         kind = 'J';
-        num = (char)jian_min;
+        num = jian_min;
     }
-    a = kind + num;
+    a[0] = kind;
+    a[1] = num+'0';
     return;
 }
 
@@ -1015,7 +1018,9 @@ int main()
         getline(cin, stmp);
         response.push_back(stmp);
     } //保存之前的信息，之后做处理
-
+    
+    
+    
     getline(cin, stmp);
     request.push_back(stmp);
 
@@ -1040,7 +1045,7 @@ int main()
             del_remain(stmp, 1);
             hand.push_back(stmp);
         }
-
+        
         // 之后的每轮，需要根据request判断自己手牌变化情况，以及当前场面剩余牌的形势
         for (int i = 2; i < turnID; i++) {
             sin.clear();
@@ -1204,7 +1209,8 @@ int main()
                 }
             }
         }// 结束更新手牌
-
+        
+       
         // 当前轮
         // 先判断手上的牌能鸣的牌
         string s;
@@ -1238,7 +1244,7 @@ int main()
         dingfan();
         del_quanzhong();
 
-
+        
         // 进行当前轮操作
         sin.clear();
         sin.str(request[turnID]);
@@ -1283,6 +1289,7 @@ int main()
         int sum_fan = 0;
         int can_hu = 0;
         
+        
         if (itmp == 2) {//这轮自摸了吗
             // 算一下番
             isZIMO = 1;
@@ -1306,10 +1313,11 @@ int main()
                 return 0;
             }
         }
-        string chupai;
+        string chupai = "no";
         quanzhongzuixiao(chupai);
+        
         bool will_pass = 1; // 本轮操作是否输出pass
-        if (itmp == 2) { // 如果当前轮是自己摸牌,则随机出牌
+        if (itmp == 2) { // 如果当前轮是自己摸牌
             sout << "PLAY " << chupai;
             hand.erase(find(hand.begin(), hand.end(), chupai));
             will_pass = 0;
