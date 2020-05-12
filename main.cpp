@@ -930,8 +930,8 @@ void del_remain(string stmp, int n) {
 }
 
 void quanzhongzuixiao(string& a) {
-    int shu_min = 1, feng_min = 1, jian_min = 1;//最小值下标
-    int shu_temp = 0, feng_temp = 0, jian_temp = 0;//最小值
+    int shu_min = 0, feng_min = 0, jian_min = 0;//最小值下标
+    int shu_temp = 9999, feng_temp = 9999, jian_temp = 9999;//最小值
     char kind;
     int num = 999;
     for (int i = 1; i < 28; i++) {
