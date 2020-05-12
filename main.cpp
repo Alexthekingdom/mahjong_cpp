@@ -15,7 +15,7 @@ vector<string> shun_zi, ke_zi, gang_zi;
 
 int shu[28] = { 0 }, feng[5] = { 0 }, jian[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表该牌的数量
 int shu_remain[28] = { 0 }, feng_remain[5] = { 0 }, jian_remain[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表该牌的数量
-int shu_ting[28][6] = { 0 }, feng_ting[5] = { 0 }, jian_ting[4] = { 0 };
+int shu_ting[28][6] = { 0 }, feng_ting[5][2] = { 0 }, jian_ting[4][2] = { 0 };
 //数牌的6个数分别表示是否听该牌，是否能杠，是否能碰，是否左两位吃，是否右两位吃，是否左右吃
 
 
@@ -24,14 +24,14 @@ int shu_quan[28][6] = { 0 }, feng_quan[5] = { 0 }, jian_quan[4] = { 0 };//数牌
 //eg.如手牌同时有2345万，4万连续吃在左权重即为45万吃的权重，为3万和6万剩余牌数量和，连续吃在右权重即34万吃，分开吃在右权重即24万吃
 int shu_quan_[28][2] = { 0 }, feng_quan_[5] = { 0 }, jian_quan_[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表最终权重，其中数牌分别是鸣牌权重和牌使用一张的损失权重
 
-int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 }, fan_shunzi[4][2] = { 0 }, jilu_flag = 0;//对子数和各种牌数，顺序为饼条万风箭
+int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 }, fan_shunzi[4][2] = { 0 }, jilu_flag = 0, yiming_flag[5] = { 0 };//对子数和各种牌数，顺序为饼条万风箭
 //番种三个值分别代表番种类型，牌型，牌大小
 //番种类型1为碰碰胡，2为五门齐，3为混一色，4为清龙，5为花龙，6为三色三同顺，7为三色三步高
 //牌型用于混一色和清龙，012分别为饼条万，花龙和三色三步高，其中顺子按数分小中大，按饼条万顺序0为小中大，1为大小中，2为中大小，3为大中小，4为小大中，5为中小大
 //番种所需顺子共记录三张牌，其中每张牌第一位表示花色，第二位表示数字，记录的牌为顺子中间的
+//已鸣的flag记录已经鸣牌的内容
 
 //牌大小用于三色三步高和三色三同顺，其值为三步高中间顺子的中间牌数字，三同顺代表顺子中间牌数字
-
 
 int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i为牌种，j为数字，表示顺子中间的牌，返回该顺子中已有的牌数
     int n = 0;
@@ -69,6 +69,29 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
     fan_shunzi[jilu_flag][0] = i;
     fan_shunzi[jilu_flag][1] = j;
     ++jilu_flag;
+}
+
+void del_quanzhong() {
+    if (fanzhong[0] != 0) {
+        for (int i = 1; i < 28; i++) {
+            if (shu_quan_[i][0] <= 1000 && shu_quan_[i][0] > 100) {
+                shu_quan_[i][0] -= 100;
+                shu_quan_[i][1] -= 100;
+            }
+        }
+        for (int i = 1; i < 4; i++) {
+            if (feng_quan_[i] <= 1000 && feng_quan_[i] > 100) {
+                feng_quan_[i] -= 100;
+                feng_quan_[i] -= 100;
+            }
+        }
+        for (int i = 1; i < 3; i++) {
+            if (jian_quan_[i] <= 1000 && jian_quan_[i] > 100) {
+                jian_quan_[i] -= 100;
+                jian_quan_[i] -= 100;
+            }
+        }
+    }
 }
 
 void dingfan() {
@@ -481,7 +504,6 @@ void paiquanzhong() {
         jian_quan_[i] += jian_quan[i] * 10;
 
     }
-
 }
 
 
@@ -550,10 +572,9 @@ void canmingpai() {
     for (int i = 1; i <= 4; ++i) {
         if (feng[i] > 1) {
 
-            feng_ting[i] = 1;
+            feng_ting[i][1] = 1;
             if (feng[i] > 2) {
-                feng_ting[i] = 1;
-
+                feng_ting[i][0] = 1;
             }
             feng_quan[i] += feng_remain[i];
             feng_quan[i] += feng_remain[i];
@@ -562,10 +583,9 @@ void canmingpai() {
     for (int i = 1; i <= 3; ++i) {
         if (jian[i] > 1) {
 
-            jian_ting[i] = 1;
+            jian_ting[i][1] = 1;
             if (jian[i] > 2) {
-                jian_ting[i] = 1;
-
+                jian_ting[i][0] = 1;
             }
             jian_quan[i] += jian_remain[i];
             jian_quan[i] += jian_remain[i];
@@ -587,6 +607,313 @@ int shu_location(string s) { //返回数牌的位置
     }
 }
 
+
+int shuru(string s, int huase, int shuzi) {//花色按饼条万风箭排列,将输入字符串转换为数字
+    int num = s[1] - '0';
+    switch (s[0]) {
+    case 'B':
+        huase = 0;
+    case 'T':
+        huase = 1;
+    case 'W':
+        huase = 2;
+    case 'F':
+        huase = 3;
+    case 'J':
+        huase = 3;
+    default:
+        return -1;
+    }
+}
+
+void num_string(string shuchu, int huase, int num) {
+    shuchu[1] = num - '0';
+    switch (huase) {
+    case '0':
+        shuchu[0] = 'B';
+    case '1':
+        shuchu[0] = 'T';
+    case '2':
+        shuchu[0] = 'W';
+    case '3':
+        shuchu[0] = 'F';
+    case '4':
+        shuchu[0] = 'J';
+    }
+}
+
+string caozuopanduan(int i) {
+    if (i == 1)return "PENG";
+    if (i == 2)return "GANG";
+    if (i == 3)return "CHI";
+
+}
+
+void caozuopanduan(string s, int op, string shuchu) {
+    int huase = -1, num = -1;
+    shuru(s, huase, num);
+    if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
+        if (huase < 3) {
+            if (shu[huase * 9 + num] == 2) {
+                op = 1;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (shu[huase * 9 + num] == 3) {
+                op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+        }
+        if (huase == 3) {
+            if (feng[num] == 2) {
+                op = 1;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (feng[num] == 3) {
+                op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+        }
+        if (huase == 4) {
+            if (jian[num] == 2) {
+                op = 1;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (jian[num] == 3) {
+                op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+        }
+    }
+    else if (fanzhong[0] == 2) {//如果五门齐
+        if (huase < 3 && (yiming_flag[huase] == 0)) {
+            if (shu_ting[huase * 9 + num][0]) {
+                if (shu_ting[huase * 9 + num][1])
+                {
+                    op = 2;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[huase] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][2])
+                {
+                    op = 1;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[huase] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][3])
+                {
+                    op = 3;
+                    --num;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[huase] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][4])
+                {
+                    op = 3;
+                    ++num;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[huase] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][5])
+                {
+                    op = 3;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[huase] = 1;
+                    return;
+                }
+            }
+        }
+        if (huase == 3 && yiming_flag[huase] == 0) {
+            if (feng_ting[num][0]) {
+                op = 2;
+                num_string(shuchu, huase, num);
+                yiming_flag[huase] = 1;
+                return;
+            }
+            if (feng_ting[num][1]) {
+                op = 1;
+                num_string(shuchu, huase, num);
+                yiming_flag[huase] = 1;
+                return;
+            }
+        }
+        if (huase == 4 && yiming_flag[huase] == 0) {
+            if (jian_ting[num][0]) {
+                op = 2;
+                num_string(shuchu, huase, num);
+                yiming_flag[huase] = 1;
+                return;
+            }
+            if (jian_ting[num][1]) {
+                op = 1;
+                num_string(shuchu, huase, num);
+                yiming_flag[huase] = 1;
+                return;
+            }
+        }
+    }
+    else if (fanzhong[0] == 3) {//如果混一色
+        for (int x = 0; x < 4; ++x) {
+            if (yiming_flag[x] == 0) {
+                if (huase == fanzhong[1]) {
+                    if (shu_ting[huase * 9 + num][0]) {
+                        if (shu_ting[huase * 9 + num][1])
+                        {
+                            op = 2;
+                            num_string(shuchu, huase, num);
+                            yiming_flag[x] = 1;
+                            return;
+                        }
+                        else if (shu_ting[huase * 9 + num][2])
+                        {
+                            op = 1;
+                            num_string(shuchu, huase, num);
+                            yiming_flag[x] = 1;
+                            return;
+                        }
+                        else if (shu_ting[huase * 9 + num][3])
+                        {
+                            op = 3;
+                            --num;
+                            num_string(shuchu, huase, num);
+                            yiming_flag[x] = 1;
+                            return;
+                        }
+                        else if (shu_ting[huase * 9 + num][4])
+                        {
+                            op = 3;
+                            ++num;
+                            num_string(shuchu, huase, num);
+                            yiming_flag[x] = 1;
+                            return;
+                        }
+                        else if (shu_ting[huase * 9 + num][5])
+                        {
+                            op = 3;
+                            num_string(shuchu, huase, num);
+                            yiming_flag[x] = 1;
+                            return;
+                        }
+                    }
+                }
+                if (huase == 3) {
+                    if (feng_ting[num][0]) {
+                        op = 2;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[x] = 1;
+                        return;
+                    }
+                    if (feng_ting[num][1]) {
+                        op = 1;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[x] = 1;
+                        return;
+                    }
+                }
+                if (huase == 4) {
+                    if (jian_ting[num][0]) {
+                        op = 2;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[x] = 1;
+                        return;
+                    }
+                    if (jian_ting[num][1]) {
+                        op = 1;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[x] = 1;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    else {
+        for (int i = 0; i < 3; i++) {//判断是不是需要的顺子
+            if (huase == fan_shunzi[i][0]) {
+                if (num == fan_shunzi[i][0]) {
+                    if (shu[huase * 9 + num - 1] >= 1 && shu[huase * 9 + num + 1] >= 1) {
+                        op = 3;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[i] = 1;
+                        return;
+                    }
+                }
+                else if ((num + 1) == fan_shunzi[i][0]) {
+                    if (shu[huase * 9 + num + 2] >= 1 && shu[huase * 9 + num + 1] >= 1) {
+                        op = 3;
+                        num += 1;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[i] = 1;
+                        return;
+                    }
+                }
+                else if ((num - 1) == fan_shunzi[i][0]) {
+                    if (shu[huase * 9 + num - 2] >= 1 && shu[huase * 9 + num - 1] >= 1) {
+                        op = 3;
+                        num -= 1;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[i] = 1;
+                        return;
+                    }
+                }
+            }
+            else{
+                continue;
+            }
+        }
+        if (huase < 3 && yiming_flag[3] == 0) {
+            if (shu_ting[huase * 9 + num][0]) {
+                /*if (shu_ting[huase * 9 + num][1])
+                {
+                    op = 2;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[3] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][2])
+                {
+                    op = 1;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[3] = 1;
+                    return;
+                }
+                else*/ if (shu_ting[huase * 9 + num][3])
+                {
+                    op = 3;
+                    --num;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[3] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][4])
+                {
+                    op = 3;
+                    ++num;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[3] = 1;
+                    return;
+                }
+                else if (shu_ting[huase * 9 + num][5])
+                {
+                    op = 3;
+                    num_string(shuchu, huase, num);
+                    yiming_flag[3] = 1;
+                    return;
+                }
+            }
+        }
+    }
+}
 void del_remain(string stmp, int n) {
     int num = stmp[1] - '0';
     switch (stmp[0]) {
@@ -607,24 +934,24 @@ string quanzhongzuixiao(string& a) {
     char kind, num;
     for (int i = 1; i < 28; i++) {
         if (shu[i] != 0) {
-            if (shu_quan[i][0] < shu_temp) {//>=使得权重相同时，先打序号大的牌
-                shu_temp = shu_quan[i][0];
+            if (shu_quan_[i][0] < shu_temp) {//>=使得权重相同时，先打序号大的牌
+                shu_temp = shu_quan_[i][0];
                 shu_min = i;
             }
         }
     }
     for (int i = 1; i < 4; i++) {
         if (feng[i] != 0) {
-            if (feng_quan[i] <= feng_temp) {
-                feng_temp = feng_quan[i];
+            if (feng_quan_[i] <= feng_temp) {
+                feng_temp = feng_quan_[i];
                 feng_min = i;
             }
         }
     }
     for (int i = 1; i < 3; i++) {
         if (jian[i] != 0) {
-            if (jian_quan[i] <= jian_temp) {
-                jian_temp = jian_quan[i];
+            if (jian_quan_[i] <= jian_temp) {
+                jian_temp = jian_quan_[i];
                 jian_min = i;
             }
         }
@@ -921,6 +1248,7 @@ int main()
         canmingpai();
         paiquanzhong();
         dingfan();
+        del_quanzhong();
 
         // 进行当前轮操作
         sin.clear();
