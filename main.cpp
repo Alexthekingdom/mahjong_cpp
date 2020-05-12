@@ -65,6 +65,7 @@ void jiaquan2(int i, int j) {//当数牌只有一张时，增加100权重,用于
     }
 }
 
+
 void jilu_shunzi(int i, int j) {//记录番种所需顺子
     fan_shunzi[jilu_flag][0] = i;
     fan_shunzi[jilu_flag][1] = j;
@@ -93,6 +94,7 @@ void del_quanzhong() {
         }
     }
 }
+
 
 void dingfan() {
     int yiyou;
@@ -571,7 +573,6 @@ void canmingpai() {
     //计算风牌和箭牌的鸣牌情况
     for (int i = 1; i <= 4; ++i) {
         if (feng[i] > 1) {
-
             feng_ting[i][1] = 1;
             if (feng[i] > 2) {
                 feng_ting[i][0] = 1;
@@ -582,7 +583,6 @@ void canmingpai() {
     }
     for (int i = 1; i <= 3; ++i) {
         if (jian[i] > 1) {
-
             jian_ting[i][1] = 1;
             if (jian[i] > 2) {
                 jian_ting[i][0] = 1;
@@ -606,7 +606,6 @@ int shu_location(string s) { //返回数牌的位置
         return -1;
     }
 }
-
 
 int shuru(string s, int huase, int shuzi) {//花色按饼条万风箭排列,将输入字符串转换为数字
     int num = s[1] - '0';
@@ -914,6 +913,7 @@ void caozuopanduan(string s, int op, string shuchu) {
         }
     }
 }
+
 void del_remain(string stmp, int n) {
     int num = stmp[1] - '0';
     switch (stmp[0]) {
@@ -1250,6 +1250,7 @@ int main()
         dingfan();
         del_quanzhong();
 
+
         // 进行当前轮操作
         sin.clear();
         sin.str(request[turnID]);
@@ -1293,7 +1294,6 @@ int main()
             }
         }
         catch (const string& error) {
-
             can_hu = 0;
         }
         if (can_hu == 1) {
