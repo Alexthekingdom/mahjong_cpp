@@ -24,7 +24,7 @@ int shu_quan[28][6] = { 0 }, feng_quan[5] = { 0 }, jian_quan[4] = { 0 };//数牌
 //eg.如手牌同时有2345万，4万连续吃在左权重即为45万吃的权重，为3万和6万剩余牌数量和，连续吃在右权重即34万吃，分开吃在右权重即24万吃
 int shu_quan_[28][2] = { 0 }, feng_quan_[5] = { 0 }, jian_quan_[4] = { 0 };//数牌按饼条万的1-9顺序排列，数组数字代表最终权重，其中数牌分别是鸣牌权重和牌使用一张的损失权重
 
-int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 }, fan_shunzi[4][2] = { 0 }, jilu_flag = 0, yiming_flag[5] = { 0 };//对子数和各种牌数，顺序为饼条万风箭
+int total_duizi = 0, duizi[6] = { 0 }, paizhong[6] = { 0 }, fanzhong[4] = { 0 }, fan_shunzi[4][2] = { 0 }, jilu_flag = 0, yiming_flag[5] = { 0 }, total_zhenduizi = 0;//对子数和各种牌数，顺序为饼条万风箭
 //番种三个值分别代表番种类型，牌型，牌大小
 //番种类型1为碰碰胡，2为五门齐，3为混一色，4为清龙，5为花龙，6为三色三同顺，7为三色三步高
 //牌型用于混一色和清龙，012分别为饼条万，花龙和三色三步高，其中顺子按数分小中大，按饼条万顺序0为小中大，1为大小中，2为中大小，3为大中小，4为小大中，5为中小大
@@ -75,7 +75,7 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
 void del_quanzhong() {
     if (fanzhong[0] != 0) {
         for (int i = 1; i < 28; i++) {
-            if (shu_quan_[i][0] <= 1000 && shu_quan_[i][0] > 100) {
+            if (shu_quan_[i][1] <= 1000 && shu_quan_[i][1] > 100) {
                 shu_quan_[i][0] -= 100;
                 shu_quan_[i][1] -= 100;
             }
@@ -104,6 +104,9 @@ void dingfan() {
             paizhong[i] += shu[i * 9 + j];
             if (shu[i * 9 + j] >= 2) {
                 ++total_duizi;
+                if (shu[i * 9 + j] == 2) {
+                    ++total_zhenduizi;
+                }
                 ++duizi[i];
             }
         }
@@ -112,6 +115,9 @@ void dingfan() {
         paizhong[3] += feng[i];
         if (feng[i] >= 2) {
             ++total_duizi;
+            if (feng[i] == 2) {
+                ++total_zhenduizi;
+            }
             ++duizi[3];
         }
     }
@@ -119,6 +125,9 @@ void dingfan() {
         paizhong[4] += jian[i];
         if (jian[i] >= 2) {
             ++total_duizi;
+            if (jian[i] == 2) {
+                ++total_zhenduizi;
+            }
             ++duizi[4];
         }
     }
@@ -133,16 +142,26 @@ void dingfan() {
                     shu_quan_[i * 9 + j][0] += 1000;
                     shu_quan_[i * 9 + j][1] += 1000;
                 }
+                else {
+                    shu_quan_[i * 9 + j][0] += 100 * shu_remain[i * 9 + j];
+                    shu_quan_[i * 9 + j][1] += 100 * shu_remain[i * 9 + j];
+                }
             }
         }
         for (int i = 1; i <= 4; ++i) {
             if (feng[i] >= 2) {
                 feng_quan_[i] += 1000;
             }
+            else {
+                feng_quan_[i] += 100 * feng_remain[i];
+            }
         }
         for (int i = 1; i <= 3; ++i) {
             if (jian[i] >= 2) {
                 jian_quan_[i] += 1000;
+            }
+            else {
+                jian_quan_[i] += 100 * jian_remain[i];
             }
         }
         return;
@@ -416,7 +435,6 @@ int maxquan(int n, int k) {//返回第k大的吃权重，k为1-4
 void paiquanzhong() {
     int paishu, max_quan;
     for (int i = 0; i < 3; ++i) {
-
         for (int j = 1; j <= 9; ++j) {
             if (shu_quan[i * 9 + j][0] == 0 || shu[i * 9 + j] == 0) {//没牌或权重都为0，只考虑牌本身权重
                 shu_quan_[i * 9 + j][0] = 0;
@@ -607,24 +625,26 @@ int shu_location(string s) { //返回数牌的位置
     }
 }
 
-void shuru(string s, int & huase, int& num) {//花色按饼条万风箭排列,将输入字符串转换为数字
+void shuru(string s, int& huase, int& num) {//花色按饼条万风箭排列,将输入字符串转换为数字
+
     num = s[1] - '0';
     switch (s[0]) {
     case 'B':
         huase = 0;
-            break;
+        break;
     case 'T':
         huase = 1;
-            break;
+        break;
     case 'W':
         huase = 2;
-            break;
+        break;
     case 'F':
         huase = 3;
-            break;
+        break;
     case 'J':
         huase = 4;
-            break;
+        break;
+
     default:
         return;
     }
@@ -636,19 +656,19 @@ void num_string(string& shuchu, int huase, int num) {
     switch (huase) {
     case 0:
         shuchu[0] = 'B';
-            break;
+        break;
     case 1:
         shuchu[0] = 'T';
-            break;
+        break;
     case 2:
         shuchu[0] = 'W';
-            break;
+        break;
     case 3:
         shuchu[0] = 'F';
-            break;
+        break;
     case 4:
         shuchu[0] = 'J';
-            break;
+        break;
     }
 }
 
@@ -880,7 +900,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                     }
                 }
             }
-            else{
+            else {
                 continue;
             }
         }
@@ -949,8 +969,8 @@ void quanzhongzuixiao(string& a) {
     int num = 999;
     for (int i = 1; i < 28; i++) {
         if (shu[i] != 0) {
-            if (shu_quan_[i][0] < shu_temp) {//>=使得权重相同时，先打序号大的牌
-                shu_temp = shu_quan_[i][0];
+            if (shu_quan_[i][1] < shu_temp) {//>=使得权重相同时，先打序号大的牌
+                shu_temp = shu_quan_[i][1];
                 shu_min = i;
             }
         }
@@ -971,7 +991,7 @@ void quanzhongzuixiao(string& a) {
             }
         }
     }
-    
+
     if (shu_temp <= feng_temp) {//权重相同，优先出数牌
         if (shu_temp <= jian_temp) {
             if ((shu_min - 1) / 9 == 0) {
@@ -982,8 +1002,8 @@ void quanzhongzuixiao(string& a) {
             }
             else
                 kind = 'W';
-            num = shu_min%9;
-            if (num == 0){
+            num = shu_min % 9;
+            if (num == 0) {
                 num = 9;
             }
         }
@@ -1001,7 +1021,7 @@ void quanzhongzuixiao(string& a) {
         num = jian_min;
     }
     a[0] = kind;
-    a[1] = num+'0';
+    a[1] = num + '0';
     return;
 }
 
@@ -1018,7 +1038,7 @@ int main()
     for (int i = 1; i < 4; i++) {
         jian_remain[i] = 4;
     }
-    for (int i = 0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
         qiangpai[i] = 21;
     }
 
@@ -1034,9 +1054,7 @@ int main()
         getline(cin, stmp);
         response.push_back(stmp);
     } //保存之前的信息，之后做处理
-    
-    
-    
+
     getline(cin, stmp);
     request.push_back(stmp);
 
@@ -1061,7 +1079,7 @@ int main()
             del_remain(stmp, 1);
             hand.push_back(stmp);
         }
-        
+
         // 之后的每轮，需要根据request判断自己手牌变化情况，以及当前场面剩余牌的形势
         for (int i = 2; i < turnID; i++) {
             sin.clear();
@@ -1079,11 +1097,10 @@ int main()
                 sin >> now_id; //当前轮玩家id
                 string op;
                 sin >> op; //当前轮操作
-                
+
                 if (op == "DRAW") {
                     qiangpai[now_id]--;
                 }
-                
                 if (op == "PLAY") {
                     sin >> stmp;
                     if (now_id == myPlayerID) {
@@ -1225,7 +1242,7 @@ int main()
                 }
             }
         }// 结束更新手牌
-        
+
         sin.clear();
         sin.str(request[turnID]);
         sin >> itmp;
@@ -1234,7 +1251,7 @@ int main()
             hand.push_back(stmp);
         }
         sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
-       
+
         // 当前轮
         // 先判断手上的牌能鸣的牌
         string s;
@@ -1274,7 +1291,6 @@ int main()
         sin.str(request[turnID]);
         sin >> itmp;
 
-        
         /*
         pack:玩家的明牌，每组第一个string为"PENG" "GANG" "CHI" 三者之一，第二个-    string为牌代码（吃牌表示中间牌代码），第三个int碰、杠时表示上家、对家、下家供牌，吃时123表示第几张是上家供牌。
         hand:玩家的暗牌，string为牌代码
@@ -1289,19 +1305,18 @@ int main()
         */
         MahjongInit();
         vector<pair<string, pair<string, int> > > pack;
-        for (vector<string>::iterator iter=ke_zi.begin();iter!=ke_zi.end();iter++){
-            pair<string, pair<string, int> > p = { "PENG",{*iter, 1}};
+        for (vector<string>::iterator iter = ke_zi.begin(); iter != ke_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "PENG",{*iter, 1} };
             pack.push_back(p);
         }
-        for (vector<string>::iterator iter=shun_zi.begin();iter!=shun_zi.end();iter++){
-            pair<string, pair<string, int> > p = { "CHI",{*iter, 1}};
+        for (vector<string>::iterator iter = shun_zi.begin(); iter != shun_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "CHI",{*iter, 1} };
             pack.push_back(p);
         }
-        for (vector<string>::iterator iter=gang_zi.begin();iter!=gang_zi.end();iter++){
-            pair<string, pair<string, int> > p = { "GANG",{*iter, 1}};
+        for (vector<string>::iterator iter = gang_zi.begin(); iter != gang_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "GANG",{*iter, 1} };
             pack.push_back(p);
         }
-        
         string winTile = *hand.rbegin();
         int flowerCount = 0;
         int isZIMO = 0;
@@ -1312,8 +1327,7 @@ int main()
         int quanFeng = quan;
         int sum_fan = 0;
         int can_hu = 0;
-        
-        
+
         if (itmp == 2) {//这轮自摸了吗
             // 算一下番
             isZIMO = 1;
@@ -1329,7 +1343,7 @@ int main()
             catch (const string& error) {
                 can_hu = 0;
             }
-            
+
             if (can_hu == 1) {
                 sout << "HU";
                 response.push_back(sout.str());
@@ -1339,7 +1353,7 @@ int main()
         }
         string chupai = "no";
         quanzhongzuixiao(chupai);
-        
+
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
             sout << "PLAY " << chupai;
@@ -1360,14 +1374,12 @@ int main()
                 isLast = 1;
             }
             if (now_player != myPlayerID) {
-                
                 if (stmp == "PLAY" || stmp == "PENG") {
                     sin >> stmp;
                 }
                 else if (stmp == "CHI") {
                     sin >> stmp >> stmp;
                 }
-                
                 // 算一下番
                 winTile = stmp;
                 try {
@@ -1388,33 +1400,33 @@ int main()
                     cout << response[turnID] << endl;
                     return 0;
                 }
-                
+              
                 int op;
                 string card_now;
                 string op_now = " ";
                 caozuopanduan(stmp, op, card_now);
                 op_now = caozuopanduan(op);
                 quanzhongzuixiao(chupai);
-                
+
                 int last_player = myPlayerID - 1;
                 if (last_player == -1) {
                     last_player = 3;
                 }
-                
+
                 if (op_now == "CHI") {
                     if (now_player != last_player) {
                         will_pass = 1;
                     }
-                    else{
+                    else {
                         will_pass = 0;
                         sout << op_now << " " << card_now << " " << chupai;
                     }
                 }
-                else if (op_now == "PENG"){
+                else if (op_now == "PENG") {
                     will_pass = 0;
                     sout << op_now << " " << chupai;
                 }
-                else if (op_now == "GANG"){
+                else if (op_now == "GANG") {
                     will_pass = 0;
                     sout << op_now;
                 }
@@ -1426,8 +1438,6 @@ int main()
         }
         response.push_back(sout.str());
     }
-
-    
     cout << response[turnID] << endl;
     return 0;
 }
