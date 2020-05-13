@@ -636,14 +636,19 @@ void num_string(string& shuchu, int huase, int num) {
     switch (huase) {
     case 0:
         shuchu[0] = 'B';
+            break;
     case 1:
         shuchu[0] = 'T';
+            break;
     case 2:
         shuchu[0] = 'W';
+            break;
     case 3:
         shuchu[0] = 'F';
+            break;
     case 4:
         shuchu[0] = 'J';
+            break;
     }
 }
 
@@ -657,6 +662,9 @@ string caozuopanduan(int i) {
 void caozuopanduan(string s, int& op, string& shuchu) {
     int huase = -1, num = -1;
     shuru(s, huase, num);
+    if (fanzhong[0] == 0) {
+        return;
+    }
     if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
         if (huase < 3) {
             if (shu[huase * 9 + num] == 2) {
@@ -1324,11 +1332,6 @@ int main()
         string chupai = "no";
         quanzhongzuixiao(chupai);
         
-        for (vector<string>::iterator iter=hand.begin();iter!=hand.end();iter++){
-            cout << *iter << " ";
-        }
-        cout << endl;
-        
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
             sout << "PLAY " << chupai;
@@ -1396,7 +1399,7 @@ int main()
                     }
                     else{
                         will_pass = 0;
-                        sout << op_now << " " << card_now << chupai;
+                        sout << op_now << " " << card_now << " " << chupai;
                     }
                 }
                 else if (op_now == "PENG"){
