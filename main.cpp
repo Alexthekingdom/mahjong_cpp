@@ -626,6 +626,7 @@ int shu_location(string s) { //返回数牌的位置
 }
 
 void shuru(string s, int& huase, int& num) {//花色按饼条万风箭排列,将输入字符串转换为数字
+
     num = s[1] - '0';
     switch (s[0]) {
     case 'B':
@@ -643,6 +644,7 @@ void shuru(string s, int& huase, int& num) {//花色按饼条万风箭排列,将
     case 'J':
         huase = 4;
         break;
+
     default:
         return;
     }
@@ -1053,8 +1055,6 @@ int main()
         response.push_back(stmp);
     } //保存之前的信息，之后做处理
 
-
-
     getline(cin, stmp);
     request.push_back(stmp);
 
@@ -1101,7 +1101,6 @@ int main()
                 if (op == "DRAW") {
                     qiangpai[now_id]--;
                 }
-
                 if (op == "PLAY") {
                     sin >> stmp;
                     if (now_id == myPlayerID) {
@@ -1244,6 +1243,14 @@ int main()
             }
         }// 结束更新手牌
 
+        sin.clear();
+        sin.str(request[turnID]);
+        sin >> itmp;
+        if (itmp == 2) {
+            sin >> stmp;
+            hand.push_back(stmp);
+        }
+        sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
 
         // 当前轮
         // 先判断手上的牌能鸣的牌
@@ -1278,12 +1285,11 @@ int main()
         dingfan();
         del_quanzhong();
 
-
+        
         // 进行当前轮操作
         sin.clear();
         sin.str(request[turnID]);
         sin >> itmp;
-
 
         /*
         pack:玩家的明牌，每组第一个string为"PENG" "GANG" "CHI" 三者之一，第二个-    string为牌代码（吃牌表示中间牌代码），第三个int碰、杠时表示上家、对家、下家供牌，吃时123表示第几张是上家供牌。
@@ -1311,7 +1317,6 @@ int main()
             pair<string, pair<string, int> > p = { "GANG",{*iter, 1} };
             pack.push_back(p);
         }
-
         string winTile = *hand.rbegin();
         int flowerCount = 0;
         int isZIMO = 0;
@@ -1322,7 +1327,6 @@ int main()
         int quanFeng = quan;
         int sum_fan = 0;
         int can_hu = 0;
-
 
         if (itmp == 2) {//这轮自摸了吗
             // 算一下番
@@ -1370,14 +1374,12 @@ int main()
                 isLast = 1;
             }
             if (now_player != myPlayerID) {
-
                 if (stmp == "PLAY" || stmp == "PENG") {
                     sin >> stmp;
                 }
                 else if (stmp == "CHI") {
                     sin >> stmp >> stmp;
                 }
-
                 // 算一下番
                 winTile = stmp;
                 try {
@@ -1398,7 +1400,7 @@ int main()
                     cout << response[turnID] << endl;
                     return 0;
                 }
-
+              
                 int op;
                 string card_now;
                 string op_now = " ";
@@ -1436,8 +1438,6 @@ int main()
         }
         response.push_back(sout.str());
     }
-
-
     cout << response[turnID] << endl;
     return 0;
 }
