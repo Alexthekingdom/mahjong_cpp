@@ -612,14 +612,19 @@ void shuru(string s, int & huase, int& num) {//花色按饼条万风箭排列,�
     switch (s[0]) {
     case 'B':
         huase = 0;
+            break;
     case 'T':
         huase = 1;
+            break;
     case 'W':
         huase = 2;
+            break;
     case 'F':
         huase = 3;
+            break;
     case 'J':
-        huase = 3;
+        huase = 4;
+            break;
     default:
         return;
     }
@@ -627,17 +632,17 @@ void shuru(string s, int & huase, int& num) {//花色按饼条万风箭排列,�
 
 void num_string(string& shuchu, int huase, int num) {
     shuchu = "00";
-    shuchu[1] = num - '0';
+    shuchu[1] = num + '0';
     switch (huase) {
-    case '0':
+    case 0:
         shuchu[0] = 'B';
-    case '1':
+    case 1:
         shuchu[0] = 'T';
-    case '2':
+    case 2:
         shuchu[0] = 'W';
-    case '3':
+    case 3:
         shuchu[0] = 'F';
-    case '4':
+    case 4:
         shuchu[0] = 'J';
     }
 }
@@ -969,7 +974,10 @@ void quanzhongzuixiao(string& a) {
             }
             else
                 kind = 'W';
-            num = (char)shu_min;
+            num = shu_min%9;
+            if (num == 0){
+                num = 9;
+            }
         }
         else {
             kind = 'J';
@@ -1316,6 +1324,11 @@ int main()
         string chupai = "no";
         quanzhongzuixiao(chupai);
         
+        for (vector<string>::iterator iter=hand.begin();iter!=hand.end();iter++){
+            cout << *iter << " ";
+        }
+        cout << endl;
+        
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
             sout << "PLAY " << chupai;
@@ -1325,11 +1338,18 @@ int main()
         else if (itmp == 3) { //如果当前轮是别人打了某牌
             sin >> itmp;
             int now_player = itmp;
+            sin >> stmp;
+            if (stmp == "DRAW" || stmp == "GANG") {
+                sout << "PASS";
+                response.push_back(sout.str());
+                cout << response[turnID] << endl;
+                return 0;
+            }
             if (qiangpai[now_player] == 0) {
                 isLast = 1;
             }
             if (now_player != myPlayerID) {
-                sin >> stmp;
+                
                 if (stmp == "PLAY" || stmp == "PENG") {
                     sin >> stmp;
                 }
@@ -1396,6 +1416,7 @@ int main()
         response.push_back(sout.str());
     }
 
+    
     cout << response[turnID] << endl;
     return 0;
 }
