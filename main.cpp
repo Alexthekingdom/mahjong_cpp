@@ -1036,6 +1036,20 @@ void del_remain(string stmp, int n) {
     }
 }
 
+void change_hand(string stmp, int n) {
+    int num = stmp[1] - '0';
+    switch (stmp[0]) {
+    case 'F':
+        feng[num] += n;
+        break;
+    case 'J':
+        jian[num] += n;
+        break;
+    default:
+        shu[shu_location(stmp)] += n;
+    }
+}
+
 void quanzhongzuixiao(string& a) {
     int shu_min = 0, feng_min = 0, jian_min = 0;//最小值下标
     int shu_temp = 9999, feng_temp = 9999, jian_temp = 9999;//最小值
@@ -1327,7 +1341,7 @@ int main()
         sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
 
         // 当前轮
-        // 先判断手上的牌能鸣的牌
+        // 先判断手上的牌
         string s;
         int num;
         for (int i = 0; i < hand.size(); i++) {
@@ -1354,6 +1368,7 @@ int main()
                 break;
             }
         }
+        
         canmingpai();
         paiquanzhong();
         dingfan();
@@ -1397,7 +1412,7 @@ int main()
         int flowerCount = 0;
         int isZIMO = 0;
         int isJUEZHANG = 0;
-        int isGANG = 0; //这里还需要做判断
+        int isGANG = 0;
         int isLast = 0;
         int menFeng = myPlayerID;
         int quanFeng = quan;
@@ -1428,10 +1443,9 @@ int main()
             }
         }
         string chupai = "no";
-        quanzhongzuixiao(chupai);
-
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
+            quanzhongzuixiao(chupai);
             sout << "PLAY " << chupai;
             hand.erase(find(hand.begin(), hand.end(), chupai));
             will_pass = 0;
@@ -1449,9 +1463,16 @@ int main()
             if (qiangpai[now_player] == 0) {
                 isLast = 1;
             }
+            
             if (now_player != myPlayerID) {
-                if (stmp == "PLAY" || stmp == "PENG") {
+                bool bugang = 0;
+                if (stmp == "PLAY" || stmp == "PENG" ) {
                     sin >> stmp;
+                }
+                else if ( stmp == "BUGANG"){
+                    sin >> stmp;
+                    isGANG = 1;
+                    bugang = 1;
                 }
                 else if (stmp == "CHI") {
                     sin >> stmp >> stmp;
@@ -1476,14 +1497,20 @@ int main()
                     cout << response[turnID] << endl;
                     return 0;
                 }
+                
+                if (bugang) {
+                    sout << "PASS";
+                    response.push_back(sout.str());
+                    cout << response[turnID] << endl;
+                    return 0;
+                }
 
                 int op;
                 string card_now;
                 string op_now = " ";
                 caozuopanduan(stmp, op, card_now);
                 op_now = caozuopanduan(op);
-                quanzhongzuixiao(chupai);
-
+                change_hand(stmp, 1);//先加一，后去删掉
                 int last_player = myPlayerID - 1;
                 if (last_player == -1) {
                     last_player = 3;
@@ -1495,11 +1522,22 @@ int main()
                     }
                     else {
                         will_pass = 0;
+ 
+                        //删除吃掉的牌，之后再判断权重最小
+                        change_hand(card_now, -1);
+                        string tmp = card_now;
+                        tmp[1] = ((card_now[1] - '0') + 1) + '0';
+                        change_hand(tmp, -1);
+                        tmp[1] = ((card_now[1] - '0') - 1) + '0';
+                        change_hand(tmp, -1);
+                        quanzhongzuixiao(chupai);
                         sout << op_now << " " << card_now << " " << chupai;
                     }
                 }
                 else if (op_now == "PENG") {
                     will_pass = 0;
+                    change_hand(stmp, -3);
+                    quanzhongzuixiao(chupai);
                     sout << op_now << " " << chupai;
                 }
                 else if (op_now == "GANG") {
