@@ -99,12 +99,12 @@ void liujiang() {//当仅剩一个对子时，给该对子加权100
 void fengjianzero() {//当风箭只剩1张时，减为0
     for (int i = 1; i < 4; i++) {
         if (feng_remain[i] == 0&&feng[i]==1) {
-            feng_quan_[i] == 0;
+            feng_quan_[i] = 0;
         }
     }
     for (int i = 1; i < 3; i++) {
         if (jian[i] == 1&&jian_remain[i]==0) {
-            jian_quan_[i] ==0;
+            jian_quan_[i] =0;
             return;
         }
     }
