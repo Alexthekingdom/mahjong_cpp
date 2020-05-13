@@ -1106,7 +1106,7 @@ int main()
 
                     sin.str(request[i - 1]);
                     sin >> itmp >> itmp >> stmp;
-                    if (stmp != "CHI") {
+                    if (stmp == "CHI") {
                         sin >> stmp >> stmp;
                     }
                     else {
@@ -1128,7 +1128,7 @@ int main()
                     sin.clear();
                     sin.str(request[i - 1]);
                     sin >> itmp >> itmp >> stmp;
-                    if (stmp != "CHI") {
+                    if (stmp == "CHI") {
                         sin >> stmp >> stmp;
                     }
                     else {
@@ -1183,7 +1183,7 @@ int main()
                         }
                         else { // 否则为明杠
                             sin >> itmp >> stmp;
-                            if (stmp != "CHI") {
+                            if (stmp == "CHI") {
                                 sin >> stmp >> stmp;
                             }
                             else {
@@ -1202,7 +1202,7 @@ int main()
                         sin.str(request[i - 1]);
                         sin >> itmp >> itmp >> stmp;
                         if (stmp != "DRAW") { //如果是DRAW，那我也不知道剩余牌库是否发生了变化
-                            if (stmp != "CHI") {
+                            if (stmp == "CHI") {
                                 sin >> stmp >> stmp;
                             }
                             else {
