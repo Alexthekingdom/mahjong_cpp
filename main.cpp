@@ -608,10 +608,10 @@ void canmingpai() {
         for (int j = 1; j <= 9; ++j) {
             //是否能碰
             if (shu[i * 9 + j] > 1) {
-                shu_ting[i * 9 + j][1] = 1;
+                shu_ting[i * 9 + j][2] = 1;
                 //是否能杠
                 if (shu[i * 9 + j] > 2) {
-                    shu_ting[i * 9 + j][2] = 1;
+                    shu_ting[i * 9 + j][1] = 1;
                 }
                 shu_quan[i * 9 + j][0] += shu_remain[i * 9 + j];
                 shu_quan[i * 9 + j][1] += shu_remain[i * 9 + j];
