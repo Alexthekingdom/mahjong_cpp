@@ -1226,6 +1226,14 @@ int main()
             }
         }// 结束更新手牌
         
+        sin.clear();
+        sin.str(request[turnID]);
+        sin >> itmp;
+        if (itmp == 2) {
+            sin >> stmp;
+            hand.push_back(stmp);
+        }
+        sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
        
         // 当前轮
         // 先判断手上的牌能鸣的牌
