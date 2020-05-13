@@ -73,22 +73,22 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
 }
 
 void liujiang() {//当仅剩一个对子时，给该对子加权100
-    if (total_zhenduizi==1) {
+    if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
-            if (shu[i]==2) {
+            if (shu[i] == 2) {
                 shu_quan_[i][0] += 100;
                 shu_quan_[i][1] += 100;
                 return;
             }
         }
         for (int i = 1; i < 4; i++) {
-            if (feng[i]==2) {
+            if (feng[i] == 2) {
                 feng_quan_[i] += 100;
                 return;
             }
         }
         for (int i = 1; i < 3; i++) {
-            if (jian[i]==2) {
+            if (jian[i] == 2) {
                 jian_quan_[i] += 100;
                 return;
             }
@@ -98,13 +98,13 @@ void liujiang() {//当仅剩一个对子时，给该对子加权100
 
 void fengjianzero() {//当风箭只剩1张时，减为0
     for (int i = 1; i < 4; i++) {
-        if (feng_remain[i] == 0&&feng[i]==1) {
+        if (feng_remain[i] == 0 && feng[i] == 1) {
             feng_quan_[i] = 0;
         }
     }
     for (int i = 1; i < 3; i++) {
-        if (jian[i] == 1&&jian_remain[i]==0) {
-            jian_quan_[i] =0;
+        if (jian[i] == 1 && jian_remain[i] == 0) {
+            jian_quan_[i] = 0;
             return;
         }
     }
@@ -311,7 +311,7 @@ void dingfan() {
         return;
     }
 
-    
+
 
     //判断五门齐，风箭各一对,数牌至少有两种有一对或能吃
     yiyou = 0;
@@ -1063,7 +1063,7 @@ void quanzhongzuixiao(string& a) {
             }
         }
     }
-    for (int i = 1; i < 4; i++) {
+    for (int i = 1; i < 5; i++) {
         if (feng[i] != 0) {
             if (feng_quan_[i] <= feng_temp) {
                 feng_temp = feng_quan_[i];
@@ -1071,7 +1071,7 @@ void quanzhongzuixiao(string& a) {
             }
         }
     }
-    for (int i = 1; i < 3; i++) {
+    for (int i = 1; i < 4; i++) {
         if (jian[i] != 0) {
             if (jian_quan_[i] <= jian_temp) {
                 jian_temp = jian_quan_[i];
@@ -1368,7 +1368,7 @@ int main()
                 break;
             }
         }
-        
+
         canmingpai();
         paiquanzhong();
         dingfan();
@@ -1463,13 +1463,13 @@ int main()
             if (qiangpai[now_player] == 0) {
                 isLast = 1;
             }
-            
+
             if (now_player != myPlayerID) {
                 bool bugang = 0;
-                if (stmp == "PLAY" || stmp == "PENG" ) {
+                if (stmp == "PLAY" || stmp == "PENG") {
                     sin >> stmp;
                 }
-                else if ( stmp == "BUGANG"){
+                else if (stmp == "BUGANG") {
                     sin >> stmp;
                     isGANG = 1;
                     bugang = 1;
@@ -1497,7 +1497,7 @@ int main()
                     cout << response[turnID] << endl;
                     return 0;
                 }
-                
+
                 if (bugang) {
                     sout << "PASS";
                     response.push_back(sout.str());
@@ -1522,7 +1522,7 @@ int main()
                     }
                     else {
                         will_pass = 0;
- 
+
                         //删除吃掉的牌，之后再判断权重最小
                         change_hand(card_now, -1);
                         string tmp = card_now;
