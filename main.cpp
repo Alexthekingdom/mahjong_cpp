@@ -254,8 +254,6 @@ void dingfan2() {
 }
 
 void dingfan() {
-    //算出手牌加已鸣的牌
-    quanbushoupai();
     int yiyou;
     //计算对子数和各花色牌数
     for (int i = 0; i < 3; ++i) {
@@ -418,7 +416,6 @@ void dingfan() {
             maxyiyou = yiyou;
         }
     }
-    //判断三色三同顺，9张需有7张
     int santongshun = 7;
     for (int j = 2; j <= 8; ++j) {
         yiyou = 0;
@@ -429,7 +426,6 @@ void dingfan() {
             maxyiyou = yiyou;
         }
     }
-    //判断三色三步高，9张需有7张
     int sanbugao = 7;
     for (int j = 3; j <= 7; ++j) {
         for (int i = 0; i < 3; ++i) {
@@ -452,9 +448,7 @@ void dingfan() {
         }
     }
 
-
-    //判断清龙，9张需有7张
-    int qinglong = 7;
+    //清龙
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -472,8 +466,7 @@ void dingfan() {
             return;
         }
     }
-    //判断花龙，9张需有7张
-    int hualong = 7;
+    //花龙
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -511,8 +504,7 @@ void dingfan() {
             return;
         }
     }
-    //判断三色三同顺，9张需有7张
-    int santongshun = 7;
+    //三色三同顺
     for (int j = 2; j <= 8; ++j) {
         yiyou = 0;
         for (int i = 0; i < 3; ++i) {
@@ -530,8 +522,7 @@ void dingfan() {
             return;
         }
     }
-    //判断三色三步高，9张需有7张
-    int sanbugao = 7;
+    //三色三步高
     for (int j = 3; j <= 7; ++j) {
         for (int i = 0; i < 3; ++i) {
             yiyou = 0;
@@ -539,7 +530,7 @@ void dingfan() {
             yiyou += shunzi_paishu((i + 1) % 3, j);
             yiyou += shunzi_paishu((i + 2) % 3, j + 1);
             if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                fanzhong[0] = 5;
+                fanzhong[0] = 7;
                 fanzhong[1] = i;
                 fanzhong[2] = j;
                 for (int m = j - 1; m <= j + 1; ++m) {
@@ -559,7 +550,7 @@ void dingfan() {
             yiyou += shunzi_paishu((i + 1) % 3, j);
             yiyou += shunzi_paishu((i + 2) % 3, j - 1);
             if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                fanzhong[0] = 5;
+                fanzhong[0] = 7;
                 fanzhong[1] = i + 3;
                 fanzhong[2] = j;
                 for (int m = j - 1; m <= j + 1; ++m) {
@@ -1135,22 +1126,24 @@ void change_hand(string stmp, int n) {
 void change_allhand(string stmp, int n) {//用于改变包括顺子刻子的手牌
     int num = stmp[1] - '0';
     if (n == -1) {//顺子情况
-        shu_[shu_location(stmp)] += n;
+        ++shu_[shu_location(stmp)];
         --stmp[1];
-        shu_[shu_location(stmp)] += n;
+        ++shu_[shu_location(stmp)];
         ++stmp[1];
         ++stmp[1];
-        shu_[shu_location(stmp)] += n;
+        ++shu_[shu_location(stmp)];
     }
-    switch (stmp[0]) {
-    case 'F':
-        feng_[num] += n;
-        break;
-    case 'J':
-        jian_[num] += n;
-        break;
-    default:
-        shu_[shu_location(stmp)] += n;
+    else {
+        switch (stmp[0]) {
+        case 'F':
+            feng_[num] += n;
+            break;
+        case 'J':
+            jian_[num] += n;
+            break;
+        default:
+            shu_[shu_location(stmp)] += n;
+        }
     }
 }
 
@@ -1496,6 +1489,8 @@ int main()
 
         canmingpai();
         paiquanzhong();
+        //算出手牌加已鸣的牌
+        quanbushoupai();
         if (fanzhong[0] == 0) {
             dingfan();
             dingfan2();
