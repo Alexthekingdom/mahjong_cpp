@@ -253,6 +253,7 @@ void dingfan2() {
     }
 }
 
+void quanbushoupai();
 void dingfan() {
     //算出手牌加已鸣的牌
     quanbushoupai();
@@ -390,7 +391,7 @@ void dingfan() {
     }
 
     int maxyiyou = 0;
-    int qinglong = 7;
+
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -400,7 +401,7 @@ void dingfan() {
             maxyiyou = yiyou;
         }
     }
-    int hualong = 7;
+
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -512,7 +513,7 @@ void dingfan() {
         }
     }
     //判断三色三同顺，9张需有7张
-    int santongshun = 7;
+    santongshun = 7;
     for (int j = 2; j <= 8; ++j) {
         yiyou = 0;
         for (int i = 0; i < 3; ++i) {
@@ -531,7 +532,7 @@ void dingfan() {
         }
     }
     //判断三色三步高，9张需有7张
-    int sanbugao = 7;
+    sanbugao = 7;
     for (int j = 3; j <= 7; ++j) {
         for (int i = 0; i < 3; ++i) {
             yiyou = 0;
@@ -1269,7 +1270,7 @@ int main()
     mydata.push_back(stmp);
     istringstream sin;
     sin.str(mydata[0]);
-    sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3];
+    //sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3]; //保持上一回合算的权重
 
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
