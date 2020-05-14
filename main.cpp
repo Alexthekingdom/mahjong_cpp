@@ -759,7 +759,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
     if (fanzhong[0] == 0) {
         return;
     }
-    if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
+    else if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
         if (huase < 3) {
             if (shu[huase * 9 + num] == 2) {
                 op = 1;
@@ -814,7 +814,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                     yiming_flag[huase] = 1;
                     return;
                 }
-                else if (shu_ting[huase * 9 + num][3])
+                else if (shu_ting[huase * 9 + num][3] && (shu[huase * 9 + num] == 0))
                 {
                     op = 3;
                     --num;
@@ -822,7 +822,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                     yiming_flag[huase] = 1;
                     return;
                 }
-                else if (shu_ting[huase * 9 + num][4])
+                else if (shu_ting[huase * 9 + num][4] && (shu[huase * 9 + num] == 0))
                 {
                     op = 3;
                     ++num;
@@ -830,7 +830,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                     yiming_flag[huase] = 1;
                     return;
                 }
-                else if (shu_ting[huase * 9 + num][5])
+                else if (shu_ting[huase * 9 + num][5] && (shu[huase * 9 + num] == 0))
                 {
                     op = 3;
                     num_string(shuchu, huase, num);
@@ -887,7 +887,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                             yiming_flag[x] = 1;
                             return;
                         }
-                        else if (shu_ting[huase * 9 + num][3])
+                        else if (shu_ting[huase * 9 + num][3] && (shu[huase * 9 + num] == 0))
                         {
                             op = 3;
                             --num;
@@ -895,7 +895,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                             yiming_flag[x] = 1;
                             return;
                         }
-                        else if (shu_ting[huase * 9 + num][4])
+                        else if (shu_ting[huase * 9 + num][4] && (shu[huase * 9 + num] == 0))
                         {
                             op = 3;
                             ++num;
@@ -903,7 +903,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                             yiming_flag[x] = 1;
                             return;
                         }
-                        else if (shu_ting[huase * 9 + num][5])
+                        else if (shu_ting[huase * 9 + num][5] && (shu[huase * 9 + num] == 0))
                         {
                             op = 3;
                             num_string(shuchu, huase, num);
@@ -945,6 +945,9 @@ void caozuopanduan(string s, int& op, string& shuchu) {
     }
 
     else {
+        if (shu[huase * 9 + num] != 0) {
+        return;
+        }
         for (int i = 0; i < 3; i++) {//判断是不是需要的顺子
             if (huase == fan_shunzi[i][0] && yiming_flag[i] == 0) {
                 if (num == fan_shunzi[i][0]) {
