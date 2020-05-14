@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -450,6 +450,7 @@ void dingfan() {
     }
 
     //清龙
+    int qinglong = 7;
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -468,6 +469,7 @@ void dingfan() {
         }
     }
     //花龙
+    int hualong = 7;
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
