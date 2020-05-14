@@ -9,7 +9,7 @@
 
 using namespace std;
 
-vector<string> request, response;
+vector<string> request, response, mydata;
 vector<string> hand;
 vector<string> shun_zi, ke_zi, gang_zi;
 
@@ -110,7 +110,7 @@ void fengjianzero() {//当风箭只剩1张时，减为0
     }
 }
 void dingfan2() {
-    if (fanzhong != 0)return;
+    if (fanzhong[0] != 0)return;
     else {
         int yiyou = 0;
         if (total_duizi == 3) {//碰碰胡
@@ -1149,6 +1149,12 @@ int main()
     getline(cin, stmp);
     request.push_back(stmp);
 
+    getline(cin, stmp);//data
+    mydata.push_back(stmp);
+    istringstream sin;
+    sin.str(mydata[0]);
+    sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3];
+
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
     }
@@ -1374,8 +1380,10 @@ int main()
 
         canmingpai();
         paiquanzhong();
-        dingfan();
-        dingfan2();
+        if (fanzhong[0] == 0) {
+            dingfan();
+            dingfan2();
+        }
         liujiang();
         fengjianzero();
 
@@ -1434,7 +1442,7 @@ int main()
                     can_hu = 1;
                 }
             }
-            catch (const string& error) {
+            catch (const string & error) {
                 can_hu = 0;
             }
 
@@ -1442,6 +1450,8 @@ int main()
                 sout << "HU";
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
+                cout << "debug" << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                 return 0;
             }
         }
@@ -1461,6 +1471,8 @@ int main()
                 sout << "PASS";
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
+                cout << "debug" << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                 return 0;
             }
             if (qiangpai[now_player] == 0) {
@@ -1491,13 +1503,15 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string& error) {
+                catch (const string & error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
                     sout << "HU";
                     response.push_back(sout.str());
                     cout << response[turnID] << endl;
+                    cout << "debug" << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                     return 0;
                 }
 
@@ -1505,6 +1519,8 @@ int main()
                     sout << "PASS";
                     response.push_back(sout.str());
                     cout << response[turnID] << endl;
+                    cout << "debug" << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                     return 0;
                 }
 
@@ -1556,5 +1572,7 @@ int main()
         response.push_back(sout.str());
     }
     cout << response[turnID] << endl;
+    cout << "debug" << endl;
+    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     return 0;
 }
