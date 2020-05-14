@@ -253,6 +253,7 @@ void dingfan2() {
     }
 }
 
+void quanbushoupai();
 void dingfan() {
     int yiyou;
     //计算对子数和各花色牌数
@@ -388,7 +389,7 @@ void dingfan() {
     }
 
     int maxyiyou = 0;
-    int qinglong = 7;
+
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -398,7 +399,7 @@ void dingfan() {
             maxyiyou = yiyou;
         }
     }
-    int hualong = 7;
+
     for (int i = 0; i < 3; ++i) {
         yiyou = 0;
         yiyou += shunzi_paishu(i, 2);
@@ -504,6 +505,7 @@ void dingfan() {
             return;
         }
     }
+
     //三色三同顺
     for (int j = 2; j <= 8; ++j) {
         yiyou = 0;
@@ -522,6 +524,7 @@ void dingfan() {
             return;
         }
     }
+
     //三色三步高
     for (int j = 3; j <= 7; ++j) {
         for (int i = 0; i < 3; ++i) {
@@ -1262,7 +1265,7 @@ int main()
     mydata.push_back(stmp);
     istringstream sin;
     sin.str(mydata[0]);
-    sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3];
+    //sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3]; //保持上一回合算的权重
 
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
