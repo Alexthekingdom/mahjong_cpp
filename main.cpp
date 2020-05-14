@@ -255,6 +255,7 @@ void dingfan2() {
 
 void dingfan() {
     //算出手牌加已鸣的牌
+    quanbushoupai();
     int yiyou;
     //计算对子数和各花色牌数
     for (int i = 0; i < 3; ++i) {
@@ -1128,6 +1129,43 @@ void change_hand(string stmp, int n) {
         break;
     default:
         shu[shu_location(stmp)] += n;
+    }
+}
+
+void change_allhand(string stmp, int n) {//用于改变包括顺子刻子的手牌
+    int num = stmp[1] - '0';
+    if (n == -1) {//顺子情况
+        shu_[shu_location(stmp)] += n;
+        --stmp[1];
+        shu_[shu_location(stmp)] += n;
+        ++stmp[1];
+        ++stmp[1];
+        shu_[shu_location(stmp)] += n;
+    }
+    switch (stmp[0]) {
+    case 'F':
+        feng_[num] += n;
+        break;
+    case 'J':
+        jian_[num] += n;
+        break;
+    default:
+        shu_[shu_location(stmp)] += n;
+    }
+}
+
+void quanbushoupai() {//计算包括顺子刻子的手牌，算番用
+    for (vector<string>::iterator iter = hand.begin(); iter != hand.end(); iter++) {
+        change_allhand(*iter, 1);
+    }
+    for (vector<string>::iterator iter = ke_zi.begin(); iter != ke_zi.end(); iter++) {
+        change_allhand(*iter, 3);
+    }
+    for (vector<string>::iterator iter = gang_zi.begin(); iter != gang_zi.end(); iter++) {
+        change_allhand(*iter, 4);
+    }
+    for (vector<string>::iterator iter = shun_zi.begin(); iter != shun_zi.end(); iter++) {
+        change_allhand(*iter, -1);
     }
 }
 
