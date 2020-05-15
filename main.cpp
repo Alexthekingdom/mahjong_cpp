@@ -254,7 +254,6 @@ void dingfan2() {
 }
 
 void quanbushoupai();
-
 void dingfanjiaquan() {
     if (fanzhong[0] == 0)return;
     if(fanzhong[0]==1){
@@ -501,6 +500,7 @@ if(fanzhong[0] == 6){
         }
     }
 }
+
 void dingfan() {
     int yiyou;
     //计算对子数和各花色牌数
@@ -1750,6 +1750,7 @@ int main()
         else {
             dingfanjiaquan()
         }
+
         liujiang();
         fengjianzero();
 
@@ -1808,7 +1809,7 @@ int main()
                     can_hu = 1;
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1869,7 +1870,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
