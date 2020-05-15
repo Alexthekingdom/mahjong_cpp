@@ -338,35 +338,35 @@ void dingfanjiaquan() {
         return;
     }
 
-    if (fanzhong[0] == 3)
+    if (fanzhong[0] == 3){
         //判断混一色，某一色数牌和字牌共10张以上
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 1; j <= 9; ++j) {
-                shu_quan_[i * 9 + j][0] += 1000;
-                shu_quan_[i * 9 + j][1] += 1000;
-                shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j]*10;
-                shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
-            }
-            for (int i = 1; i <= 4; ++i) {
-                if (feng_[i] >= 2) {
-                    feng_quan_[i] += 1020;
-                    feng_quan_[i] += feng_remain[i] * 10;
+        int i = fanzhong[1];
+                for (int j = 1; j <= 9; ++j) {
+                    shu_quan_[i * 9 + j][0] += 1000;
+                    shu_quan_[i * 9 + j][1] += 1000;
+                    shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
+                    shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
                 }
-                else {
-                    feng_quan_[i] += 50;
-                    feng_quan_[i] += feng_remain[i];
-                    //待讨论
+                for (int i = 1; i <= 4; ++i) {
+                    if (feng_[i] >= 2) {
+                        feng_quan_[i] += 1020;
+                        feng_quan_[i] += feng_remain[i] * 10;
+                    }
+                    else {
+                        feng_quan_[i] += 50;
+                        feng_quan_[i] += feng_remain[i];
+                        //待讨论
+                    }
                 }
-            }
-            for (int i = 1; i <= 3; ++i) {
-                if (jian_[i] >= 2) {
-                    jian_quan_[i] += 1020;
-                    jian_quan_[i] += jian_remain[i] * 10;
+                for (int i = 1; i <= 3; ++i) {
+                    if (jian_[i] >= 2) {
+                        jian_quan_[i] += 1020;
+                        jian_quan_[i] += jian_remain[i] * 10;
+                    }
+                    else {
+                        jian_quan_[i] += 50;//待讨论
+                    }
                 }
-                else {
-                    jian_quan_[i] += 50;//待讨论
-                }
-            }
             return;
         }
     int maxyiyou = 0;
