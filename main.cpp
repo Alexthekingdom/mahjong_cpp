@@ -176,7 +176,7 @@ void dingfan2() {
                         }
                     }
                     else {
-                        if(feng_remain[i]!=0)feng_quan_[i] += 5;//待讨论
+                        if (feng_remain[i] != 0)feng_quan_[i] += 5;//待讨论
                     }
                 }
                 for (int i = 1; i <= 3; ++i) {
@@ -286,8 +286,8 @@ void dingfanjiaquan() {
                 if (shu_[i * 9 + j] >= 2) {
                     shu_quan_[i * 9 + j][0] += 1000;
                     shu_quan_[i * 9 + j][1] += 1000;
-                    shu_quan_[i * 9 + j][0] += (shu_remain[i * 9 + j]*10);
-                    shu_quan_[i * 9 + j][1] +=(shu_remain[i * 9 + j] * 10);
+                    shu_quan_[i * 9 + j][0] += (shu_remain[i * 9 + j] * 10);
+                    shu_quan_[i * 9 + j][1] += (shu_remain[i * 9 + j] * 10);
                 }
                 else {
                     shu_quan_[i * 9 + j][0] += 100 * shu_remain[i * 9 + j];
@@ -298,7 +298,7 @@ void dingfanjiaquan() {
         for (int i = 1; i <= 4; ++i) {
             if (feng_[i] >= 2) {
                 feng_quan_[i] += 1000;
-                feng_quan_[i] += feng_remain[i]*10;
+                feng_quan_[i] += feng_remain[i] * 10;
             }
             else {
                 feng_quan_[i] += 100 * feng_remain[i];
@@ -344,7 +344,7 @@ void dingfanjiaquan() {
             for (int j = 1; j <= 9; ++j) {
                 shu_quan_[i * 9 + j][0] += 1000;
                 shu_quan_[i * 9 + j][1] += 1000;
-                shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j]*10;
+                shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
                 shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
             }
             for (int i = 1; i <= 4; ++i) {
@@ -1308,7 +1308,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
         }
         for (int i = 0; i < 3; i++) {//判断是不是需要的顺子
             if (huase == fan_shunzi[i][0] && yiming_flag[i] == 0) {
-                if (num == fan_shunzi[i][0]) {
+                if (num == fan_shunzi[i][1]) {
                     if (shu[huase * 9 + num - 1] >= 1 && shu[huase * 9 + num + 1] >= 1) {
                         op = 3;
                         num_string(shuchu, huase, num);
@@ -1316,7 +1316,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                         return;
                     }
                 }
-                else if ((num + 1) == fan_shunzi[i][0]) {
+                else if ((num + 1) == fan_shunzi[i][1]) {
                     if (shu[huase * 9 + num + 2] >= 1 && shu[huase * 9 + num + 1] >= 1) {
                         op = 3;
                         num += 1;
@@ -1325,7 +1325,7 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                         return;
                     }
                 }
-                else if ((num - 1) == fan_shunzi[i][0]) {
+                else if ((num - 1) == fan_shunzi[i][1]) {
                     if (shu[huase * 9 + num - 2] >= 1 && shu[huase * 9 + num - 1] >= 1) {
                         op = 3;
                         num -= 1;
