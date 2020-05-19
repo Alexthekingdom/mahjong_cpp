@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"//用于线上调试
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -1397,6 +1397,31 @@ void del_remain(string stmp, int n) {
     }
 }
 
+bool JUEZHANG(string stmp) {
+    int num = stmp[1] - '0';
+    int out;
+    int no;
+    switch (stmp[0]) {
+    case 'F':
+        out = feng_remain[num];
+            no = feng[num];
+        break;
+    case 'J':
+        out = jian_remain[num];
+            no = jian[num];
+        break;
+    default:
+        out = shu_remain[shu_location(stmp)];
+            no = shu[num];
+    }
+    if (out == 3 && no==0) {
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
 void change_hand(string stmp, int n) {
     int num = stmp[1] - '0';
     switch (stmp[0]) {
@@ -1825,7 +1850,7 @@ int main()
         string winTile = *hand.rbegin();
         int flowerCount = 0;
         int isZIMO = 0;
-        int isJUEZHANG = 0;
+        int isJUEZHANG = JUEZHANG(winTile);
         int isGANG = 0;
         int isLast = 0;
         int menFeng = myPlayerID;
@@ -1836,6 +1861,9 @@ int main()
         if (itmp == 2) {//这轮自摸了吗
             // 算一下番
             isZIMO = 1;
+            if (qiangpai[myPlayerID] == 0) {
+                isLast = 1;
+            }
             try {
                 auto re = MahjongFanCalculator(pack, hand, winTile, flowerCount, isZIMO, isJUEZHANG, isGANG, isLast, menFeng, quanFeng);
                 for (auto i : re) {
@@ -1897,6 +1925,7 @@ int main()
                 }
                 // 算一下番
                 winTile = stmp;
+                isJUEZHANG = JUEZHANG(winTile);
                 try {
                     auto re = MahjongFanCalculator(pack, hand, winTile, flowerCount, isZIMO, isJUEZHANG, isGANG, isLast, menFeng, quanFeng);
                     for (auto i : re) {
@@ -1937,34 +1966,40 @@ int main()
                 if (last_player == -1) {
                     last_player = 3;
                 }
-
-                if (op_now == "CHI") {
-                    if (now_player != last_player) {
-                        will_pass = 1;
+                
+                int next_player = now_player+1;
+                if (next_player == 4) {
+                    next_player = 0;
+                }
+                
+                if (qiangpai[next_player] != 0) { //如果下家墙牌还在，才能吃碰杠
+                    if (op_now == "CHI") {
+                        if (now_player != last_player) {
+                            will_pass = 1;
+                        }
+                        else {
+                            will_pass = 0;
+                            //删除吃掉的牌，之后再判断权重最小
+                            change_hand(card_now, -1);
+                            string tmp = card_now;
+                            tmp[1] = ((card_now[1] - '0') + 1) + '0';
+                            change_hand(tmp, -1);
+                            tmp[1] = ((card_now[1] - '0') - 1) + '0';
+                            change_hand(tmp, -1);
+                            quanzhongzuixiao(chupai);
+                            sout << op_now << " " << card_now << " " << chupai;
+                        }
                     }
-                    else {
+                    else if (op_now == "PENG") {
                         will_pass = 0;
-
-                        //删除吃掉的牌，之后再判断权重最小
-                        change_hand(card_now, -1);
-                        string tmp = card_now;
-                        tmp[1] = ((card_now[1] - '0') + 1) + '0';
-                        change_hand(tmp, -1);
-                        tmp[1] = ((card_now[1] - '0') - 1) + '0';
-                        change_hand(tmp, -1);
+                        change_hand(stmp, -3);
                         quanzhongzuixiao(chupai);
-                        sout << op_now << " " << card_now << " " << chupai;
+                        sout << op_now << " " << chupai;
                     }
-                }
-                else if (op_now == "PENG") {
-                    will_pass = 0;
-                    change_hand(stmp, -3);
-                    quanzhongzuixiao(chupai);
-                    sout << op_now << " " << chupai;
-                }
-                else if (op_now == "GANG") {
-                    will_pass = 0;
-                    sout << op_now;
+                    else if (op_now == "GANG") {
+                        will_pass = 0;
+                        sout << op_now;
+                    }
                 }
             }
         }
