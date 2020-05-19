@@ -2012,6 +2012,5 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
-    cout << qiangpai[0] << qiangpai[1] << qiangpai[2] << qiangpai[3];
     return 0;
 }
