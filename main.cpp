@@ -1762,14 +1762,7 @@ int main()
             }
         }// 结束更新手牌
 
-        sin.clear();
-        sin.str(request[turnID]);
-        sin >> itmp;
-        if (itmp == 2) {
-            sin >> stmp;
-            hand.push_back(stmp);
-        }
-        sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
+        
 
         // 当前轮
         // 先判断手上的牌
@@ -1847,7 +1840,7 @@ int main()
             pair<string, pair<string, int> > p = { "GANG",{*iter, 1} };
             pack.push_back(p);
         }
-        string winTile = *hand.rbegin();
+        string winTile;
         int flowerCount = 0;
         int isZIMO = 0;
         int isJUEZHANG = JUEZHANG(winTile);
@@ -1860,6 +1853,8 @@ int main()
 
         if (itmp == 2) {//这轮自摸了吗
             // 算一下番
+            sin >> stmp;
+            winTile = stmp;
             isZIMO = 1;
             if (qiangpai[myPlayerID] == 0) {
                 isLast = 1;
@@ -1887,6 +1882,15 @@ int main()
                 return 0;
             }
         }
+        
+        sin.clear();
+        sin.str(request[turnID]);
+        sin >> itmp;
+        if (itmp == 2) {
+            sin >> stmp;
+            hand.push_back(stmp);
+        }
+        
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
