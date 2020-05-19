@@ -1414,7 +1414,7 @@ bool JUEZHANG(string stmp) {
         out = shu_remain[shu_location(stmp)];
             no = shu[num];
     }
-    if (out == 3 && no==0) {
+    if (out == 1 && no==0) {
         return 1;
     }
     else{
@@ -1871,6 +1871,7 @@ int main()
                 }
                 if (sum_fan >= 8) {
                     can_hu = 1;
+
                 }
             }
             catch (const string & error) {
@@ -1933,6 +1934,7 @@ int main()
                     }
                     if (sum_fan >= 8) {
                         can_hu = 1;
+                        cout << JUEZHANG(winTile);
                     }
                 }
                 catch (const string & error) {
@@ -2012,5 +2014,7 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+    
+    
     return 0;
 }
