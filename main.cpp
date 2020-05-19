@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -1762,52 +1762,6 @@ int main()
             }
         }// 结束更新手牌
 
-        
-
-        // 当前轮
-        // 先判断手上的牌
-        string s;
-        int num;
-        for (int i = 0; i < hand.size(); i++) {
-            s = hand[i];
-            num = s[1] - '0';
-            if (s[0] == 'S') {
-                break;//用于终止输入
-            }
-            switch (s[0]) {
-            case 'B':
-                ++shu[num];
-                break;
-            case 'T':
-                ++shu[num + 9];
-                break;
-            case 'W':
-                ++shu[num + 18];
-                break;
-            case 'F':
-                ++feng[num];
-                break;
-            case 'J':
-                ++jian[num];
-                break;
-            }
-        }
-
-        canmingpai();
-        paiquanzhong();
-        //算出手牌加已鸣的牌
-        quanbushoupai();
-        if (fanzhong[0] == 0) {
-            dingfan();
-            dingfan2();
-        }
-        else {
-            dingfanjiaquan();
-        }
-
-        liujiang();
-        fengjianzero();
-
 
         // 进行当前轮操作
         sin.clear();
@@ -1891,6 +1845,50 @@ int main()
             hand.push_back(stmp);
         }
         
+        // 当前轮
+        // 先判断手上的牌
+        string s;
+        int num;
+        for (int i = 0; i < hand.size(); i++) {
+            s = hand[i];
+            num = s[1] - '0';
+            if (s[0] == 'S') {
+                break;//用于终止输入
+            }
+            switch (s[0]) {
+            case 'B':
+                ++shu[num];
+                break;
+            case 'T':
+                ++shu[num + 9];
+                break;
+            case 'W':
+                ++shu[num + 18];
+                break;
+            case 'F':
+                ++feng[num];
+                break;
+            case 'J':
+                ++jian[num];
+                break;
+            }
+        }
+
+        canmingpai();
+        paiquanzhong();
+        //算出手牌加已鸣的牌
+        quanbushoupai();
+        if (fanzhong[0] == 0) {
+            dingfan();
+            dingfan2();
+        }
+        else {
+            dingfanjiaquan();
+        }
+
+        liujiang();
+        fengjianzero();
+        
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
@@ -1938,7 +1936,6 @@ int main()
                     }
                     if (sum_fan >= 8) {
                         can_hu = 1;
-                        cout << JUEZHANG(winTile);
                     }
                 }
                 catch (const string & error) {
