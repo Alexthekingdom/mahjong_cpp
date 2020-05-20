@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -1762,6 +1762,7 @@ int main()
             sin >> stmp;
             hand.push_back(stmp);
         }
+        
 
         // 当前轮
         // 先判断手上的牌
@@ -1791,7 +1792,9 @@ int main()
                 break;
             }
         }
-
+        
+        
+        
         canmingpai();
         paiquanzhong();
         //算出手牌加已鸣的牌
@@ -1807,6 +1810,29 @@ int main()
         liujiang();
         fengjianzero();
 
+        if (itmp == 2) {
+            int num = stmp[1] - '0';
+            int now = 0;
+            switch (stmp[0]) {
+            case 'F':
+                now = feng[num];
+                break;
+            case 'J':
+                now = jian[num];
+                break;
+            default:
+                now = shu[shu_location(stmp)];
+            }
+            if (now == 4&&fanzhong[0] == 1) {
+                sout << "GANG " << stmp;
+                response.push_back(sout.str());
+                cout << response[turnID] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                return 0;
+            }
+        }
+        
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
