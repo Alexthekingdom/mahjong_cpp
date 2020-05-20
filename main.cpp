@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"//用于线上调试
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -337,103 +337,40 @@ void dingfanjiaquan() {
         }
         return;
     }
-
-    if (fanzhong[0] == 3)
-        //判断混一色，某一色数牌和字牌共10张以上
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 1; j <= 9; ++j) {
-                shu_quan_[i * 9 + j][0] += 1000;
-                shu_quan_[i * 9 + j][1] += 1000;
-                shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
-                shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
-            }
-            for (int i = 1; i <= 4; ++i) {
-                if (feng_[i] >= 2) {
-                    feng_quan_[i] += 1020;
-                    feng_quan_[i] += feng_remain[i] * 10;
-                }
-                else {
-                    feng_quan_[i] += 50;
-                    feng_quan_[i] += feng_remain[i];
-                    //待讨论
-                }
-            }
-            for (int i = 1; i <= 3; ++i) {
-                if (jian_[i] >= 2) {
-                    jian_quan_[i] += 1020;
-                    jian_quan_[i] += jian_remain[i] * 10;
-                }
-                else {
-                    jian_quan_[i] += 50;//待讨论
-                }
-            }
-            return;
+    int i;
+    if (fanzhong[0] == 3) {//判断混一色，某一色数牌和字牌共10张以上
+        i = fanzhong[1];
+        for (int j = 1; j <= 9; ++j) {
+            shu_quan_[i * 9 + j][0] += 1000;
+            shu_quan_[i * 9 + j][1] += 1000;
+            shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
+            shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
         }
-    int maxyiyou = 0;
-    int yiyou = 0;
-
-    for (int i = 0; i < 3; ++i) {
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 2);
-        yiyou += shunzi_paishu(i, 5);
-        yiyou += shunzi_paishu(i, 8);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
+        for (i = 1; i <= 4; ++i) {
+            if (feng_[i] >= 2) {
+                feng_quan_[i] += 1020;
+                feng_quan_[i] += feng_remain[i] * 10;
+            }
+            else {
+                feng_quan_[i] += 50;
+                feng_quan_[i] += feng_remain[i];
+                //待讨论
+            }
         }
+        for (i = 1; i <= 3; ++i) {
+            if (jian_[i] >= 2) {
+                jian_quan_[i] += 1020;
+                jian_quan_[i] += jian_remain[i] * 10;
+            }
+            else {
+                jian_quan_[i] += 50;//待讨论
+            }
+        }
+        return;
     }
-
-    for (int i = 0; i < 3; ++i) {
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 2);
-        yiyou += shunzi_paishu((i + 1) % 3, 5);
-        yiyou += shunzi_paishu((i + 2) % 3, 8);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 8);
-        yiyou += shunzi_paishu((i + 1) % 3, 5);
-        yiyou += shunzi_paishu((i + 2) % 3, 2);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-    }
-    int santongshun = 7;
-    for (int j = 2; j <= 8; ++j) {
-        yiyou = 0;
-        for (int i = 0; i < 3; ++i) {
-            yiyou += shunzi_paishu(i, j);
-        }
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-    }
-    int sanbugao = 7;
-    for (int j = 3; j <= 7; ++j) {
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, j - 1);
-            yiyou += shunzi_paishu((i + 1) % 3, j);
-            yiyou += shunzi_paishu((i + 2) % 3, j + 1);
-            if (yiyou > maxyiyou) {
-                maxyiyou = yiyou;
-            }
-        }
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, j + 1);
-            yiyou += shunzi_paishu((i + 1) % 3, j);
-            yiyou += shunzi_paishu((i + 2) % 3, j - 1);
-            if (yiyou > maxyiyou) {
-                maxyiyou = yiyou;
-            }
-        }
-    }
-
     //清龙
     if (fanzhong[0] == 4) {
-        int i = fanzhong[1];
+        i = fanzhong[1];
         for (int j = 1; j <= 9; ++j) {
             jiaquan(i, j);
         }
@@ -445,98 +382,73 @@ void dingfanjiaquan() {
     //花龙
     int hualong = 7;
     if (fanzhong[0] == 5) {
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, 2);
-            yiyou += shunzi_paishu((i + 1) % 3, 5);
-            yiyou += shunzi_paishu((i + 2) % 3, 8);
-            if (yiyou >= hualong && (yiyou == maxyiyou)) {
-                for (int m = 1; m <= 3; ++m) {
-                    jiaquan(i, m);
-                    jiaquan((i + 1) % 3, m + 3);
-                    jiaquan((i + 2) % 3, m + 6);
+        i = fanzhong[1];
+        if (i < 3) {
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m + 6);
+            }
+            jilu_shunzi(i, 2);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 8);
+            return;
+        }
+        else {
+            i -= 3;
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m + 6);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m);
+            }
+            jilu_shunzi(i, 8);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 2);
+            return;
+        }
+        int j;
+        //三色三同顺
+        if (fanzhong[0] == 6) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            for (i = 0; i < 3; ++i) {
+                jiaquan(i, j - 1);
+                jiaquan(i, j);
+                jiaquan(i, j + 1);
+                jilu_shunzi(i, j);
+            }
+            return;
+        }
+        //三色三步高
+        if (fanzhong[0] == 7) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            if (i < 3) {
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m - 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m + 1);
                 }
-                jilu_shunzi(i, 2);
-                jilu_shunzi((i + 1) % 3, 5);
-                jilu_shunzi((i + 2) % 3, 8);
+                jilu_shunzi(i, j - 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j + 1);
                 return;
             }
-
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, 8);
-            yiyou += shunzi_paishu((i + 1) % 3, 5);
-            yiyou += shunzi_paishu((i + 2) % 3, 2);
-            if (yiyou >= hualong && (yiyou == maxyiyou)) {
-                for (int m = 1; m <= 3; ++m) {
-                    jiaquan(i, m + 6);
-                    jiaquan((i + 1) % 3, m + 3);
-                    jiaquan((i + 2) % 3, m);
+            else {
+                i -= 3;
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m + 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m - 1);
                 }
-                jilu_shunzi(i, 8);
-                jilu_shunzi((i + 1) % 3, 5);
-                jilu_shunzi((i + 2) % 3, 2);
+                jilu_shunzi(i, j + 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j - 1);
                 return;
             }
         }
     }
-
-    //三色三同顺
-    if (fanzhong[0] == 6) {
-        int j = fanzhong[2];
-        for (int i = 0; i < 3; ++i) {
-            jiaquan(i, j - 1);
-            jiaquan(i, j);
-            jiaquan(i, j + 1);
-            jilu_shunzi(i, j);
-        }
-        return;
-    }
-
-    //三色三步高
-    if (fanzhong[0] == 7)
-        for (int j = 3; j <= 7; ++j) {
-            for (int i = 0; i < 3; ++i) {
-                yiyou = 0;
-                yiyou += shunzi_paishu(i, j - 1);
-                yiyou += shunzi_paishu((i + 1) % 3, j);
-                yiyou += shunzi_paishu((i + 2) % 3, j + 1);
-                if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                    fanzhong[1] = i;
-                    fanzhong[2] = j;
-                    for (int m = j - 1; m <= j + 1; ++m) {
-                        jiaquan(i, m - 1);
-                        jiaquan((i + 1) % 3, m);
-                        jiaquan((i + 2) % 3, m + 1);
-                    }
-                    jilu_shunzi(i, j - 1);
-                    jilu_shunzi((i + 1) % 3, j);
-                    jilu_shunzi((i + 2) % 3, j + 1);
-                    return;
-                }
-            }
-            for (int i = 0; i < 3; ++i) {
-                yiyou = 0;
-                yiyou += shunzi_paishu(i, j + 1);
-                yiyou += shunzi_paishu((i + 1) % 3, j);
-                yiyou += shunzi_paishu((i + 2) % 3, j - 1);
-                if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                    fanzhong[0] = 7;
-                    fanzhong[1] = i + 3;
-                    fanzhong[2] = j;
-                    for (int m = j - 1; m <= j + 1; ++m) {
-                        jiaquan(i, m + 1);
-                        jiaquan((i + 1) % 3, m);
-                        jiaquan((i + 2) % 3, m - 1);
-                    }
-                    jilu_shunzi(i, j + 1);
-                    jilu_shunzi((i + 1) % 3, j);
-                    jilu_shunzi((i + 2) % 3, j - 1);
-                    return;
-                }
-            }
-        }
 }
-
 void dingfan() {
     int yiyou;
     //计算对子数和各花色牌数
@@ -1829,7 +1741,7 @@ int main()
 
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1944,7 +1856,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
@@ -1975,7 +1887,7 @@ int main()
                 if (last_player == -1) {
                     last_player = 3;
                 }
-              
+
                 int next_player = now_player + 1;
                 if (next_player == 4) {
                     next_player = 0;
@@ -2021,5 +1933,7 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+
+
     return 0;
 }
