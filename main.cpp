@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -1829,7 +1829,7 @@ int main()
 
                 }
             }
-            catch (const string& error) {
+            catch (const string & error) {
                 can_hu = 0;
             }
 
@@ -1944,7 +1944,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string& error) {
+                catch (const string & error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
@@ -1975,7 +1975,7 @@ int main()
                 if (last_player == -1) {
                     last_player = 3;
                 }
-
+              
                 int next_player = now_player + 1;
                 if (next_player == 4) {
                     next_player = 0;
@@ -2021,7 +2021,5 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
-
-
     return 0;
 }
