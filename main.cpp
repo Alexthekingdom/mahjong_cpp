@@ -1119,37 +1119,37 @@ void caozuopanduan(string s, int& op, string& shuchu) {
     }
     else if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
         if (huase < 3) {
-            if (shu[huase * 9 + num] == 2) {
-                op = 1;
-                num_string(shuchu, huase, num);
-                return;
-            }
             if (shu[huase * 9 + num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 3) {
-            if (feng[num] == 2) {
+            if (shu[huase * 9 + num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 3) {
             if (feng[num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 4) {
-            if (jian[num] == 2) {
+            if (feng[num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 4) {
             if (jian[num] == 3) {
                 op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (jian[num] == 2) {
+                op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
