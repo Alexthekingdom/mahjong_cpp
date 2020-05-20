@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"//用于线上调试
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -88,21 +88,21 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
 void liujiang() {//当仅剩一个对子时，给该对子加权100
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
-            if (shu[i] == 2) {
-                shu_quan_[i][0] += 100;
-                shu_quan_[i][1] += 100;
+            if (shu_[i] == 2) {
+                shu_quan_[i][0] += 200;
+                shu_quan_[i][1] += 200;
                 return;
             }
         }
         for (int i = 1; i < 4; i++) {
-            if (feng[i] == 2) {
-                feng_quan_[i] += 100;
+            if (feng_[i] == 2) {
+                feng_quan_[i] += 200;
                 return;
             }
         }
         for (int i = 1; i < 3; i++) {
-            if (jian[i] == 2) {
-                jian_quan_[i] += 100;
+            if (jian_[i] == 2) {
+                jian_quan_[i] += 200;
                 return;
             }
         }
@@ -129,7 +129,7 @@ void dingfan2() {
         if (total_duizi == 3) {//碰碰胡
             for (int i = 0; i < 3; ++i) {
                 for (int j = 1; j <= 9; ++j) {
-                    if (shu[i * 9 + j] >= 2) {
+                    if (shu_[i * 9 + j] >= 2) {
                         if (shu_remain[i * 9 + j] != 0) {
                             shu_quan_[i * 9 + j][0] += 100;
                             shu_quan_[i * 9 + j][1] += 100;
@@ -142,7 +142,7 @@ void dingfan2() {
                 }
             }
             for (int i = 1; i <= 4; ++i) {
-                if (feng[i] >= 2) {
+                if (feng_[i] >= 2) {
                     if (feng_remain[i] != 0) {
                         feng_quan_[i] += 100;
                     }
@@ -152,7 +152,7 @@ void dingfan2() {
                 }
             }
             for (int i = 1; i <= 3; ++i) {
-                if (jian[i] >= 2) {
+                if (jian_[i] >= 2) {
                     if (jian_remain[i] != 0) {
                         jian_quan_[i] += 100;
                     }
@@ -169,7 +169,7 @@ void dingfan2() {
                     shu_quan_[i * 9 + j][1] += 100;
                 }
                 for (int i = 1; i <= 4; ++i) {
-                    if (feng[i] >= 2) {
+                    if (feng_[i] >= 2) {
                         if (feng_remain[i] != 0)feng_quan_[i] += 102;
                         else {
                             feng_quan_[i] += 10;
@@ -180,7 +180,7 @@ void dingfan2() {
                     }
                 }
                 for (int i = 1; i <= 3; ++i) {
-                    if (jian[i] >= 2) {
+                    if (jian_[i] >= 2) {
                         if (feng_remain[i] != 0) {
                             jian_quan_[i] += 102;
                         }
@@ -337,103 +337,40 @@ void dingfanjiaquan() {
         }
         return;
     }
-
-    if (fanzhong[0] == 3)
-        //判断混一色，某一色数牌和字牌共10张以上
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 1; j <= 9; ++j) {
-                shu_quan_[i * 9 + j][0] += 1000;
-                shu_quan_[i * 9 + j][1] += 1000;
-                shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
-                shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
-            }
-            for (int i = 1; i <= 4; ++i) {
-                if (feng_[i] >= 2) {
-                    feng_quan_[i] += 1020;
-                    feng_quan_[i] += feng_remain[i] * 10;
-                }
-                else {
-                    feng_quan_[i] += 50;
-                    feng_quan_[i] += feng_remain[i];
-                    //待讨论
-                }
-            }
-            for (int i = 1; i <= 3; ++i) {
-                if (jian_[i] >= 2) {
-                    jian_quan_[i] += 1020;
-                    jian_quan_[i] += jian_remain[i] * 10;
-                }
-                else {
-                    jian_quan_[i] += 50;//待讨论
-                }
-            }
-            return;
+    int i;
+    if (fanzhong[0] == 3) {//判断混一色，某一色数牌和字牌共10张以上
+        i = fanzhong[1];
+        for (int j = 1; j <= 9; ++j) {
+            shu_quan_[i * 9 + j][0] += 1000;
+            shu_quan_[i * 9 + j][1] += 1000;
+            shu_quan_[i * 9 + j][0] += shu_remain[i * 9 + j] * 10;
+            shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
         }
-    int maxyiyou = 0;
-    int yiyou = 0;
-
-    for (int i = 0; i < 3; ++i) {
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 2);
-        yiyou += shunzi_paishu(i, 5);
-        yiyou += shunzi_paishu(i, 8);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
+        for (i = 1; i <= 4; ++i) {
+            if (feng_[i] >= 2) {
+                feng_quan_[i] += 1020;
+                feng_quan_[i] += feng_remain[i] * 10;
+            }
+            else {
+                feng_quan_[i] += 50;
+                feng_quan_[i] += feng_remain[i];
+                //待讨论
+            }
         }
+        for (i = 1; i <= 3; ++i) {
+            if (jian_[i] >= 2) {
+                jian_quan_[i] += 1020;
+                jian_quan_[i] += jian_remain[i] * 10;
+            }
+            else {
+                jian_quan_[i] += 50;//待讨论
+            }
+        }
+        return;
     }
-
-    for (int i = 0; i < 3; ++i) {
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 2);
-        yiyou += shunzi_paishu((i + 1) % 3, 5);
-        yiyou += shunzi_paishu((i + 2) % 3, 8);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-
-        yiyou = 0;
-        yiyou += shunzi_paishu(i, 8);
-        yiyou += shunzi_paishu((i + 1) % 3, 5);
-        yiyou += shunzi_paishu((i + 2) % 3, 2);
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-    }
-    int santongshun = 7;
-    for (int j = 2; j <= 8; ++j) {
-        yiyou = 0;
-        for (int i = 0; i < 3; ++i) {
-            yiyou += shunzi_paishu(i, j);
-        }
-        if (yiyou > maxyiyou) {
-            maxyiyou = yiyou;
-        }
-    }
-    int sanbugao = 7;
-    for (int j = 3; j <= 7; ++j) {
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, j - 1);
-            yiyou += shunzi_paishu((i + 1) % 3, j);
-            yiyou += shunzi_paishu((i + 2) % 3, j + 1);
-            if (yiyou > maxyiyou) {
-                maxyiyou = yiyou;
-            }
-        }
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, j + 1);
-            yiyou += shunzi_paishu((i + 1) % 3, j);
-            yiyou += shunzi_paishu((i + 2) % 3, j - 1);
-            if (yiyou > maxyiyou) {
-                maxyiyou = yiyou;
-            }
-        }
-    }
-
     //清龙
     if (fanzhong[0] == 4) {
-        int i = fanzhong[1];
+        i = fanzhong[1];
         for (int j = 1; j <= 9; ++j) {
             jiaquan(i, j);
         }
@@ -445,98 +382,73 @@ void dingfanjiaquan() {
     //花龙
     int hualong = 7;
     if (fanzhong[0] == 5) {
-        for (int i = 0; i < 3; ++i) {
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, 2);
-            yiyou += shunzi_paishu((i + 1) % 3, 5);
-            yiyou += shunzi_paishu((i + 2) % 3, 8);
-            if (yiyou >= hualong && (yiyou == maxyiyou)) {
-                for (int m = 1; m <= 3; ++m) {
-                    jiaquan(i, m);
-                    jiaquan((i + 1) % 3, m + 3);
-                    jiaquan((i + 2) % 3, m + 6);
+        i = fanzhong[1];
+        if (i < 3) {
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m + 6);
+            }
+            jilu_shunzi(i, 2);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 8);
+            return;
+        }
+        else {
+            i -= 3;
+            for (int m = 1; m <= 3; ++m) {
+                jiaquan(i, m + 6);
+                jiaquan((i + 1) % 3, m + 3);
+                jiaquan((i + 2) % 3, m);
+            }
+            jilu_shunzi(i, 8);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 2);
+            return;
+        }
+        int j;
+        //三色三同顺
+        if (fanzhong[0] == 6) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            for (i = 0; i < 3; ++i) {
+                jiaquan(i, j - 1);
+                jiaquan(i, j);
+                jiaquan(i, j + 1);
+                jilu_shunzi(i, j);
+            }
+            return;
+        }
+        //三色三步高
+        if (fanzhong[0] == 7) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            if (i < 3) {
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m - 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m + 1);
                 }
-                jilu_shunzi(i, 2);
-                jilu_shunzi((i + 1) % 3, 5);
-                jilu_shunzi((i + 2) % 3, 8);
+                jilu_shunzi(i, j - 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j + 1);
                 return;
             }
-
-            yiyou = 0;
-            yiyou += shunzi_paishu(i, 8);
-            yiyou += shunzi_paishu((i + 1) % 3, 5);
-            yiyou += shunzi_paishu((i + 2) % 3, 2);
-            if (yiyou >= hualong && (yiyou == maxyiyou)) {
-                for (int m = 1; m <= 3; ++m) {
-                    jiaquan(i, m + 6);
-                    jiaquan((i + 1) % 3, m + 3);
-                    jiaquan((i + 2) % 3, m);
+            else {
+                i -= 3;
+                for (int m = j - 1; m <= j + 1; ++m) {
+                    jiaquan(i, m + 1);
+                    jiaquan((i + 1) % 3, m);
+                    jiaquan((i + 2) % 3, m - 1);
                 }
-                jilu_shunzi(i, 8);
-                jilu_shunzi((i + 1) % 3, 5);
-                jilu_shunzi((i + 2) % 3, 2);
+                jilu_shunzi(i, j + 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j - 1);
                 return;
             }
         }
     }
-
-    //三色三同顺
-    if (fanzhong[0] == 6) {
-        int j = fanzhong[2];
-        for (int i = 0; i < 3; ++i) {
-            jiaquan(i, j - 1);
-            jiaquan(i, j);
-            jiaquan(i, j + 1);
-            jilu_shunzi(i, j);
-        }
-        return;
-    }
-
-    //三色三步高
-    if (fanzhong[0] == 7)
-        for (int j = 3; j <= 7; ++j) {
-            for (int i = 0; i < 3; ++i) {
-                yiyou = 0;
-                yiyou += shunzi_paishu(i, j - 1);
-                yiyou += shunzi_paishu((i + 1) % 3, j);
-                yiyou += shunzi_paishu((i + 2) % 3, j + 1);
-                if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                    fanzhong[1] = i;
-                    fanzhong[2] = j;
-                    for (int m = j - 1; m <= j + 1; ++m) {
-                        jiaquan(i, m - 1);
-                        jiaquan((i + 1) % 3, m);
-                        jiaquan((i + 2) % 3, m + 1);
-                    }
-                    jilu_shunzi(i, j - 1);
-                    jilu_shunzi((i + 1) % 3, j);
-                    jilu_shunzi((i + 2) % 3, j + 1);
-                    return;
-                }
-            }
-            for (int i = 0; i < 3; ++i) {
-                yiyou = 0;
-                yiyou += shunzi_paishu(i, j + 1);
-                yiyou += shunzi_paishu((i + 1) % 3, j);
-                yiyou += shunzi_paishu((i + 2) % 3, j - 1);
-                if (yiyou >= sanbugao && (yiyou == maxyiyou)) {
-                    fanzhong[0] = 7;
-                    fanzhong[1] = i + 3;
-                    fanzhong[2] = j;
-                    for (int m = j - 1; m <= j + 1; ++m) {
-                        jiaquan(i, m + 1);
-                        jiaquan((i + 1) % 3, m);
-                        jiaquan((i + 2) % 3, m - 1);
-                    }
-                    jilu_shunzi(i, j + 1);
-                    jilu_shunzi((i + 1) % 3, j);
-                    jilu_shunzi((i + 2) % 3, j - 1);
-                    return;
-                }
-            }
-        }
 }
-
 void dingfan() {
     int yiyou;
     //计算对子数和各花色牌数
@@ -1119,37 +1031,37 @@ void caozuopanduan(string s, int& op, string& shuchu) {
     }
     else if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
         if (huase < 3) {
-            if (shu[huase * 9 + num] == 2) {
-                op = 1;
-                num_string(shuchu, huase, num);
-                return;
-            }
             if (shu[huase * 9 + num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 3) {
-            if (feng[num] == 2) {
+            if (shu[huase * 9 + num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 3) {
             if (feng[num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 4) {
-            if (jian[num] == 2) {
+            if (feng[num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 4) {
             if (jian[num] == 3) {
                 op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (jian[num] == 2) {
+                op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
@@ -1357,26 +1269,32 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                 }
                 else*/ if (shu_ting[huase * 9 + num][3])
                 {
-                    op = 3;
-                    --num;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num - 2][1] < 1000 && shu_quan_[huase * 9 + num - 1][1] < 1000) {
+                        op = 3;
+                        --num;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
                 else if (shu_ting[huase * 9 + num][4])
                 {
-                    op = 3;
-                    ++num;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num + 2][1] < 1000 && shu_quan_[huase * 9 + num + 1][1] < 1000) {
+                        op = 3;
+                        ++num;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
                 else if (shu_ting[huase * 9 + num][5])
                 {
-                    op = 3;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num - 1][1] < 1000 && shu_quan_[huase * 9 + num + 1][1] < 1000) {
+                        op = 3;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
             }
         }
@@ -1394,6 +1312,31 @@ void del_remain(string stmp, int n) {
         break;
     default:
         shu_remain[shu_location(stmp)] -= n;
+    }
+}
+
+bool JUEZHANG(string stmp) {
+    int num = stmp[1] - '0';
+    int out;
+    int no;
+    switch (stmp[0]) {
+    case 'F':
+        out = feng_remain[num];
+        no = feng[num];
+        break;
+    case 'J':
+        out = jian_remain[num];
+        no = jian[num];
+        break;
+    default:
+        out = shu_remain[shu_location(stmp)];
+        no = shu[num];
+    }
+    if (out == 1 && no == 0) {
+        return 1;
+    }
+    else {
+        return 0;
     }
 }
 
@@ -1592,7 +1535,7 @@ int main()
                 string op;
                 sin >> op; //当前轮操作
 
-                if (op == "DRAW") {
+                if (op == "DRAW" || op == "GANG" || op == "BUGANG") {
                     qiangpai[now_id]--;
                 }
                 if (op == "PLAY") {
@@ -1737,6 +1680,81 @@ int main()
             }
         }// 结束更新手牌
 
+
+        // 进行当前轮操作
+        sin.clear();
+        sin.str(request[turnID]);
+        sin >> itmp;
+
+        /*
+        pack:玩家的明牌，每组第一个string为"PENG" "GANG" "CHI" 三者之一，第二个-    string为牌代码（吃牌表示中间牌代码），第三个int碰、杠时表示上家、对家、下家供牌，吃时123表示第几张是上家供牌。
+        hand:玩家的暗牌，string为牌代码
+        winTile:和的那张牌代码
+        flowerCount:补花数
+        isZIMO:是否为自摸和牌
+        isJUEZHANG:是否为和绝张
+        isGANG:关于杠，复合点和时为枪杠和，复合自摸则为杠上开花
+        isLast:是否为牌墙最后一张，复合自摸为妙手回春，否则为海底捞月
+        menFeng:门风，0123表示东南西北
+        quanFeng:圈风，0123表示东南西北
+        */
+        MahjongInit();
+        vector<pair<string, pair<string, int> > > pack;
+        for (vector<string>::iterator iter = ke_zi.begin(); iter != ke_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "PENG",{*iter, 1} };
+            pack.push_back(p);
+        }
+        for (vector<string>::iterator iter = shun_zi.begin(); iter != shun_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "CHI",{*iter, 1} };
+            pack.push_back(p);
+        }
+        for (vector<string>::iterator iter = gang_zi.begin(); iter != gang_zi.end(); iter++) {
+            pair<string, pair<string, int> > p = { "GANG",{*iter, 1} };
+            pack.push_back(p);
+        }
+        string winTile;
+        int flowerCount = 0;
+        int isZIMO = 0;
+        int isJUEZHANG = JUEZHANG(winTile);
+        int isGANG = 0;
+        int isLast = 0;
+        int menFeng = myPlayerID;
+        int quanFeng = quan;
+        int sum_fan = 0;
+        int can_hu = 0;
+
+        if (itmp == 2) {//这轮自摸了吗
+            // 算一下番
+            sin >> stmp;
+            winTile = stmp;
+            isZIMO = 1;
+            if (qiangpai[myPlayerID] == 0) {
+                isLast = 1;
+            }
+            try {
+                auto re = MahjongFanCalculator(pack, hand, winTile, flowerCount, isZIMO, isJUEZHANG, isGANG, isLast, menFeng, quanFeng);
+                for (auto i : re) {
+                    sum_fan += i.first;
+                }
+                if (sum_fan >= 8) {
+                    can_hu = 1;
+
+                }
+            }
+            catch (const string & error) {
+                can_hu = 0;
+            }
+
+            if (can_hu == 1) {
+                sout << "HU";
+                response.push_back(sout.str());
+                cout << response[turnID] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                return 0;
+            }
+        }
+
         sin.clear();
         sin.str(request[turnID]);
         sin >> itmp;
@@ -1744,7 +1762,6 @@ int main()
             sin >> stmp;
             hand.push_back(stmp);
         }
-        sin.clear();//判断这轮如果是摸牌，则手牌里面加上这个摸到的牌
 
         // 当前轮
         // 先判断手上的牌
@@ -1790,74 +1807,6 @@ int main()
         liujiang();
         fengjianzero();
 
-
-        // 进行当前轮操作
-        sin.clear();
-        sin.str(request[turnID]);
-        sin >> itmp;
-
-        /*
-        pack:玩家的明牌，每组第一个string为"PENG" "GANG" "CHI" 三者之一，第二个-    string为牌代码（吃牌表示中间牌代码），第三个int碰、杠时表示上家、对家、下家供牌，吃时123表示第几张是上家供牌。
-        hand:玩家的暗牌，string为牌代码
-        winTile:和的那张牌代码
-        flowerCount:补花数
-        isZIMO:是否为自摸和牌
-        isJUEZHANG:是否为和绝张
-        isGANG:关于杠，复合点和时为枪杠和，复合自摸则为杠上开花
-        isLast:是否为牌墙最后一张，复合自摸为妙手回春，否则为海底捞月
-        menFeng:门风，0123表示东南西北
-        quanFeng:圈风，0123表示东南西北
-        */
-        MahjongInit();
-        vector<pair<string, pair<string, int> > > pack;
-        for (vector<string>::iterator iter = ke_zi.begin(); iter != ke_zi.end(); iter++) {
-            pair<string, pair<string, int> > p = { "PENG",{*iter, 1} };
-            pack.push_back(p);
-        }
-        for (vector<string>::iterator iter = shun_zi.begin(); iter != shun_zi.end(); iter++) {
-            pair<string, pair<string, int> > p = { "CHI",{*iter, 1} };
-            pack.push_back(p);
-        }
-        for (vector<string>::iterator iter = gang_zi.begin(); iter != gang_zi.end(); iter++) {
-            pair<string, pair<string, int> > p = { "GANG",{*iter, 1} };
-            pack.push_back(p);
-        }
-        string winTile = *hand.rbegin();
-        int flowerCount = 0;
-        int isZIMO = 0;
-        int isJUEZHANG = 0;
-        int isGANG = 0;
-        int isLast = 0;
-        int menFeng = myPlayerID;
-        int quanFeng = quan;
-        int sum_fan = 0;
-        int can_hu = 0;
-
-        if (itmp == 2) {//这轮自摸了吗
-            // 算一下番
-            isZIMO = 1;
-            try {
-                auto re = MahjongFanCalculator(pack, hand, winTile, flowerCount, isZIMO, isJUEZHANG, isGANG, isLast, menFeng, quanFeng);
-                for (auto i : re) {
-                    sum_fan += i.first;
-                }
-                if (sum_fan >= 8) {
-                    can_hu = 1;
-                }
-            }
-            catch (const string & error) {
-                can_hu = 0;
-            }
-
-            if (can_hu == 1) {
-                sout << "HU";
-                response.push_back(sout.str());
-                cout << response[turnID] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
-                return 0;
-            }
-        }
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
@@ -1897,6 +1846,7 @@ int main()
                 }
                 // 算一下番
                 winTile = stmp;
+                isJUEZHANG = JUEZHANG(winTile);
                 try {
                     auto re = MahjongFanCalculator(pack, hand, winTile, flowerCount, isZIMO, isJUEZHANG, isGANG, isLast, menFeng, quanFeng);
                     for (auto i : re) {
@@ -1938,33 +1888,39 @@ int main()
                     last_player = 3;
                 }
 
-                if (op_now == "CHI") {
-                    if (now_player != last_player) {
-                        will_pass = 1;
-                    }
-                    else {
-                        will_pass = 0;
+                int next_player = now_player + 1;
+                if (next_player == 4) {
+                    next_player = 0;
+                }
 
-                        //删除吃掉的牌，之后再判断权重最小
-                        change_hand(card_now, -1);
-                        string tmp = card_now;
-                        tmp[1] = ((card_now[1] - '0') + 1) + '0';
-                        change_hand(tmp, -1);
-                        tmp[1] = ((card_now[1] - '0') - 1) + '0';
-                        change_hand(tmp, -1);
-                        quanzhongzuixiao(chupai);
-                        sout << op_now << " " << card_now << " " << chupai;
+                if (qiangpai[next_player] != 0) { //如果下家墙牌还在，才能吃碰杠
+                    if (op_now == "CHI") {
+                        if (now_player != last_player) {
+                            will_pass = 1;
+                        }
+                        else {
+                            will_pass = 0;
+                            //删除吃掉的牌，之后再判断权重最小
+                            change_hand(card_now, -1);
+                            string tmp = card_now;
+                            tmp[1] = ((card_now[1] - '0') + 1) + '0';
+                            change_hand(tmp, -1);
+                            tmp[1] = ((card_now[1] - '0') - 1) + '0';
+                            change_hand(tmp, -1);
+                            quanzhongzuixiao(chupai);
+                            sout << op_now << " " << card_now << " " << chupai;
+                        }
                     }
-                }
-                else if (op_now == "PENG") {
-                    will_pass = 0;
-                    change_hand(stmp, -3);
-                    quanzhongzuixiao(chupai);
-                    sout << op_now << " " << chupai;
-                }
-                else if (op_now == "GANG") {
-                    will_pass = 0;
-                    sout << op_now;
+                    else if (op_now == "PENG") {
+                        will_pass = 0;
+                        change_hand(stmp, -3);
+                        quanzhongzuixiao(chupai);
+                        sout << op_now << " " << chupai;
+                    }
+                    else if (op_now == "GANG") {
+                        will_pass = 0;
+                        sout << op_now;
+                    }
                 }
             }
         }
@@ -1977,5 +1933,7 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+
+
     return 0;
 }
