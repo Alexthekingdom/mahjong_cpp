@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -336,7 +336,7 @@ void dingfanjiaquan() {
             if (feng_[i] >= 2) {
                 feng_quan_[i] += 1000;
                 feng_quan_[i] += feng_remain[i] * 10;
-                if (feng_[i] >= 3){
+                if (feng_[i] >= 3) {
                     feng_quan_[i] += 1000;
                 }
             }
@@ -551,7 +551,7 @@ void dingfan() {
         for (int i = 1; i <= 4; ++i) {
             if (feng_[i] >= 2) {
                 feng_quan_[i] += 1000;
-                if(feng_[i] >= 3)feng_quan_[i] += 1000;
+                if (feng_[i] >= 3)feng_quan_[i] += 1000;
             }
             else {
                 feng_quan_[i] += 100 * feng_remain[i];
@@ -868,11 +868,11 @@ void paiquanzhong() {
             else if (shu[i * 9 + j] == 3) {//三张牌，可碰加吃或三张吃，其他情况的权重绝不会比这两种大，不讨论
                 if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 2) + maxquan(i * 9 + j, 3))) {//碰加吃的权重大，此处两边都有最大权重的吃，因此不计算
                     if (maxquan(i * 9 + j, 1) == 0) {//没有能吃的，鸣牌权重等于碰，且用牌不损失
-                        shu_quan_[i * 9 + j][0] = (shu_quan[i * 9 + j][1] + maxquan(i * 9 + j, 1)) * 10;
+                        shu_quan_[i * 9 + j][0] =  shu_quan[i * 9 + j][1] * 10;
                         shu_quan_[i * 9 + j][1] = 0;
                     }
                     else {//有能吃的，鸣牌权重等于碰加吃，用牌权重是鸣牌权重减去两个吃和碰里较大的
-                        shu_quan_[i * 9 + j][0] = shu_quan[i * 9 + j][1] * 10;
+                        shu_quan_[i * 9 + j][0] = (shu_quan[i * 9 + j][1] + maxquan(i * 9 + j, 1)) * 10;
                         if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 1) + maxquan(i * 9 + j, 2))) {//碰的权重更大
                             shu_quan_[i * 9 + j][1] = shu_quan_[i * 9 + j][0] - shu_quan[i * 9 + j][1] * 10;
                         }
@@ -1790,7 +1790,7 @@ int main()
 
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1939,7 +1939,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
