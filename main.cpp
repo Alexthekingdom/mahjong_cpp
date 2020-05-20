@@ -352,7 +352,7 @@ void dingfanjiaquan() {
                 feng_quan_[i] += feng_remain[i] * 10;
             }
             else {
-                feng_quan_[i] += 50;
+                feng_quan_[i] += 100;
                 feng_quan_[i] += feng_remain[i];
                 //待讨论
             }
@@ -363,7 +363,7 @@ void dingfanjiaquan() {
                 jian_quan_[i] += jian_remain[i] * 10;
             }
             else {
-                jian_quan_[i] += 50;//待讨论
+                jian_quan_[i] += 100;//待讨论
             }
         }
         return;
@@ -553,9 +553,9 @@ void dingfan() {
         return;
     }
 
-    //判断混一色，某一色数牌和字牌共10张以上
+    //判断混一色，某一色数牌和字牌共11张以上
     for (int i = 0; i < 3; ++i) {
-        if (paizhong[i] >= (10 - paizhong[3] - paizhong[4])) {
+        if (paizhong[i] >= (11 - paizhong[3] - paizhong[4])) {
 
             fanzhong[0] = 3;
             fanzhong[1] = i;
