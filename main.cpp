@@ -1831,6 +1831,14 @@ int main()
                 cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                 return 0;
             }
+            if (find(ke_zi.begin(), ke_zi.end(), stmp) != ke_zi.end()){
+                sout << "BUGANG " << stmp;
+                response.push_back(sout.str());
+                cout << response[turnID] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
+                return 0;
+            }
         }
         
         string chupai = "no";
