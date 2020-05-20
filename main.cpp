@@ -88,21 +88,21 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
 void liujiang() {//当仅剩一个对子时，给该对子加权100
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
-            if (shu[i] == 2) {
-                shu_quan_[i][0] += 100;
-                shu_quan_[i][1] += 100;
+            if (shu_[i] == 2) {
+                shu_quan_[i][0] += 200;
+                shu_quan_[i][1] += 200;
                 return;
             }
         }
         for (int i = 1; i < 4; i++) {
-            if (feng[i] == 2) {
-                feng_quan_[i] += 100;
+            if (feng_[i] == 2) {
+                feng_quan_[i] += 200;
                 return;
             }
         }
         for (int i = 1; i < 3; i++) {
-            if (jian[i] == 2) {
-                jian_quan_[i] += 100;
+            if (jian_[i] == 2) {
+                jian_quan_[i] += 200;
                 return;
             }
         }
@@ -129,7 +129,7 @@ void dingfan2() {
         if (total_duizi == 3) {//碰碰胡
             for (int i = 0; i < 3; ++i) {
                 for (int j = 1; j <= 9; ++j) {
-                    if (shu[i * 9 + j] >= 2) {
+                    if (shu_[i * 9 + j] >= 2) {
                         if (shu_remain[i * 9 + j] != 0) {
                             shu_quan_[i * 9 + j][0] += 100;
                             shu_quan_[i * 9 + j][1] += 100;
@@ -142,7 +142,7 @@ void dingfan2() {
                 }
             }
             for (int i = 1; i <= 4; ++i) {
-                if (feng[i] >= 2) {
+                if (feng_[i] >= 2) {
                     if (feng_remain[i] != 0) {
                         feng_quan_[i] += 100;
                     }
@@ -152,7 +152,7 @@ void dingfan2() {
                 }
             }
             for (int i = 1; i <= 3; ++i) {
-                if (jian[i] >= 2) {
+                if (jian_[i] >= 2) {
                     if (jian_remain[i] != 0) {
                         jian_quan_[i] += 100;
                     }
@@ -169,7 +169,7 @@ void dingfan2() {
                     shu_quan_[i * 9 + j][1] += 100;
                 }
                 for (int i = 1; i <= 4; ++i) {
-                    if (feng[i] >= 2) {
+                    if (feng_[i] >= 2) {
                         if (feng_remain[i] != 0)feng_quan_[i] += 102;
                         else {
                             feng_quan_[i] += 10;
@@ -180,7 +180,7 @@ void dingfan2() {
                     }
                 }
                 for (int i = 1; i <= 3; ++i) {
-                    if (jian[i] >= 2) {
+                    if (jian_[i] >= 2) {
                         if (feng_remain[i] != 0) {
                             jian_quan_[i] += 102;
                         }
