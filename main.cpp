@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"//用于线上调试
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -123,6 +123,7 @@ void fengjianzero() {//当风箭只剩1张时，减为0
     }
 }
 void dingfan2() {
+
     if (fanzhong[0] != 0)return;
     else {
         int yiyou = 0;
@@ -279,6 +280,38 @@ void dingfan2() {
 
 void quanbushoupai();
 void dingfanjiaquan() {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 1; j <= 9; ++j) {
+            paizhong[i] += shu_[i * 9 + j];
+            if (shu_[i * 9 + j] >= 2) {
+                ++total_duizi;
+                if (shu_[i * 9 + j] == 2) {
+                    ++total_zhenduizi;
+                }
+                ++duizi[i];
+            }
+        }
+    }
+    for (int i = 1; i <= 4; ++i) {
+        paizhong[3] += feng_[i];
+        if (feng_[i] >= 2) {
+            ++total_duizi;
+            if (feng_[i] == 2) {
+                ++total_zhenduizi;
+            }
+            ++duizi[3];
+        }
+    }
+    for (int i = 1; i <= 3; ++i) {
+        paizhong[4] += jian_[i];
+        if (jian_[i] >= 2) {
+            ++total_duizi;
+            if (jian_[i] == 2) {
+                ++total_zhenduizi;
+            }
+            ++duizi[4];
+        }
+    }
     if (fanzhong[0] == 0)return;
     if (fanzhong[0] == 1) {
         for (int i = 0; i < 3; ++i) {
@@ -1757,7 +1790,7 @@ int main()
 
                 }
             }
-            catch (const string& error) {
+            catch (const string & error) {
                 can_hu = 0;
             }
 
@@ -1778,7 +1811,6 @@ int main()
             sin >> stmp;
             hand.push_back(stmp);
         }
-        
 
 
         // 当前轮
@@ -1810,6 +1842,8 @@ int main()
             }
         }
 
+
+
         canmingpai();
         paiquanzhong();
         //算出手牌加已鸣的牌
@@ -1838,7 +1872,6 @@ int main()
             default:
                 now = shu[shu_location(stmp)];
             }
-
             if (now == 4 && fanzhong[0] == 1) {
                 sout << "GANG " << stmp;
                 response.push_back(sout.str());
@@ -1847,7 +1880,6 @@ int main()
                 cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                 return 0;
             }
-
             if (find(ke_zi.begin(), ke_zi.end(), stmp) != ke_zi.end()) {
                 sout << "BUGANG " << stmp;
                 response.push_back(sout.str());
@@ -1907,7 +1939,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string& error) {
+                catch (const string & error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
