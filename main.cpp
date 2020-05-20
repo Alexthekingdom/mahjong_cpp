@@ -89,20 +89,20 @@ void liujiang() {//当仅剩一个对子时，给该对子加权100
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
             if (shu_[i] == 2) {
-                shu_quan_[i][0] += 200;
-                shu_quan_[i][1] += 200;
+                shu_quan_[i][0] += 500;
+                shu_quan_[i][1] += 500;
                 return;
             }
         }
         for (int i = 1; i < 4; i++) {
             if (feng_[i] == 2) {
-                feng_quan_[i] += 200;
+                feng_quan_[i] += 500;
                 return;
             }
         }
         for (int i = 1; i < 3; i++) {
             if (jian_[i] == 2) {
-                jian_quan_[i] += 200;
+                jian_quan_[i] += 500;
                 return;
             }
         }
@@ -288,6 +288,10 @@ void dingfanjiaquan() {
                     shu_quan_[i * 9 + j][1] += 1000;
                     shu_quan_[i * 9 + j][0] += (shu_remain[i * 9 + j] * 10);
                     shu_quan_[i * 9 + j][1] += (shu_remain[i * 9 + j] * 10);
+                    if (shu_[i * 9 + j] >= 3) {
+                        shu_quan_[i * 9 + j][0] += 1000;
+                        shu_quan_[i * 9 + j][1] += 1000;
+                    }
                 }
                 else {
                     shu_quan_[i * 9 + j][0] += 100 * shu_remain[i * 9 + j];
@@ -299,6 +303,9 @@ void dingfanjiaquan() {
             if (feng_[i] >= 2) {
                 feng_quan_[i] += 1000;
                 feng_quan_[i] += feng_remain[i] * 10;
+                if (feng_[i] >= 3){
+                    feng_quan_[i] += 1000;
+                }
             }
             else {
                 feng_quan_[i] += 100 * feng_remain[i];
@@ -308,6 +315,9 @@ void dingfanjiaquan() {
             if (jian_[i] >= 2) {
                 jian_quan_[i] += 1000;
                 jian_quan_[i] += jian_remain[i] * 10;
+                if (jian_[i] >= 3) {
+                    jian_quan_[i] += 1000;
+                }
             }
             else {
                 jian_quan_[i] += 100 * jian_remain[i];
@@ -494,6 +504,10 @@ void dingfan() {
                 if (shu_[i * 9 + j] >= 2) {
                     shu_quan_[i * 9 + j][0] += 1000;
                     shu_quan_[i * 9 + j][1] += 1000;
+                    if (shu_[i * 9 + j] >= 3) {
+                        shu_quan_[i * 9 + j][0] += 1000;
+                        shu_quan_[i * 9 + j][1] += 1000;
+                    }
                 }
                 else {
                     shu_quan_[i * 9 + j][0] += 100 * shu_remain[i * 9 + j];
@@ -504,6 +518,7 @@ void dingfan() {
         for (int i = 1; i <= 4; ++i) {
             if (feng_[i] >= 2) {
                 feng_quan_[i] += 1000;
+                if(feng_[i] >= 3)feng_quan_[i] += 1000;
             }
             else {
                 feng_quan_[i] += 100 * feng_remain[i];
@@ -512,6 +527,7 @@ void dingfan() {
         for (int i = 1; i <= 3; ++i) {
             if (jian_[i] >= 2) {
                 jian_quan_[i] += 1000;
+                if (jian_[i] >= 3) jian_quan_[i] += 1000;
             }
             else {
                 jian_quan_[i] += 100 * jian_remain[i];
@@ -1764,6 +1780,7 @@ int main()
         }
         
 
+
         // 当前轮
         // 先判断手上的牌
         string s;
@@ -1792,9 +1809,7 @@ int main()
                 break;
             }
         }
-        
-        
-        
+
         canmingpai();
         paiquanzhong();
         //算出手牌加已鸣的牌
@@ -1823,7 +1838,8 @@ int main()
             default:
                 now = shu[shu_location(stmp)];
             }
-            if (now == 4&&fanzhong[0] == 1) {
+
+            if (now == 4 && fanzhong[0] == 1) {
                 sout << "GANG " << stmp;
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
@@ -1831,7 +1847,8 @@ int main()
                 cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
                 return 0;
             }
-            if (find(ke_zi.begin(), ke_zi.end(), stmp) != ke_zi.end()){
+
+            if (find(ke_zi.begin(), ke_zi.end(), stmp) != ke_zi.end()) {
                 sout << "BUGANG " << stmp;
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
@@ -1840,7 +1857,7 @@ int main()
                 return 0;
             }
         }
-        
+
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
