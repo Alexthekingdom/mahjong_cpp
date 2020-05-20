@@ -1119,37 +1119,37 @@ void caozuopanduan(string s, int& op, string& shuchu) {
     }
     else if (fanzhong[0] == 1) {//判断番种是否为碰碰胡，如是，则判断是否可以碰
         if (huase < 3) {
-            if (shu[huase * 9 + num] == 2) {
-                op = 1;
-                num_string(shuchu, huase, num);
-                return;
-            }
             if (shu[huase * 9 + num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 3) {
-            if (feng[num] == 2) {
+            if (shu[huase * 9 + num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 3) {
             if (feng[num] == 3) {
                 op = 2;
                 num_string(shuchu, huase, num);
                 return;
             }
-        }
-        if (huase == 4) {
-            if (jian[num] == 2) {
+            if (feng[num] == 2) {
                 op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
+        }
+        if (huase == 4) {
             if (jian[num] == 3) {
                 op = 2;
+                num_string(shuchu, huase, num);
+                return;
+            }
+            if (jian[num] == 2) {
+                op = 1;
                 num_string(shuchu, huase, num);
                 return;
             }
@@ -1357,26 +1357,32 @@ void caozuopanduan(string s, int& op, string& shuchu) {
                 }
                 else*/ if (shu_ting[huase * 9 + num][3])
                 {
-                    op = 3;
-                    --num;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num - 2][1] < 1000 && shu_quan_[huase * 9 + num - 1][1] < 1000) {
+                        op = 3;
+                        --num;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
                 else if (shu_ting[huase * 9 + num][4])
                 {
-                    op = 3;
-                    ++num;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num + 2][1] < 1000 && shu_quan_[huase * 9 + num + 1][1] < 1000) {
+                        op = 3;
+                        ++num;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
                 else if (shu_ting[huase * 9 + num][5])
                 {
-                    op = 3;
-                    num_string(shuchu, huase, num);
-                    yiming_flag[3] = 1;
-                    return;
+                    if (shu_quan_[huase * 9 + num - 1][1] < 1000 && shu_quan_[huase * 9 + num + 1][1] < 1000) {
+                        op = 3;
+                        num_string(shuchu, huase, num);
+                        yiming_flag[3] = 1;
+                        return;
+                    }
                 }
             }
         }
@@ -1404,20 +1410,20 @@ bool JUEZHANG(string stmp) {
     switch (stmp[0]) {
     case 'F':
         out = feng_remain[num];
-            no = feng[num];
+        no = feng[num];
         break;
     case 'J':
         out = jian_remain[num];
-            no = jian[num];
+        no = jian[num];
         break;
     default:
         out = shu_remain[shu_location(stmp)];
-            no = shu[num];
+        no = shu[num];
     }
-    if (out == 1 && no==0) {
+    if (out == 1 && no == 0) {
         return 1;
     }
-    else{
+    else {
         return 0;
     }
 }
@@ -1836,7 +1842,7 @@ int main()
                 return 0;
             }
         }
-        
+
         sin.clear();
         sin.str(request[turnID]);
         sin >> itmp;
@@ -1844,7 +1850,7 @@ int main()
             sin >> stmp;
             hand.push_back(stmp);
         }
-        
+
         // 当前轮
         // 先判断手上的牌
         string s;
@@ -1888,7 +1894,7 @@ int main()
 
         liujiang();
         fengjianzero();
-        
+
         string chupai = "no";
         bool will_pass = 1; // 本轮操作是否输出pass
         if (itmp == 2) { // 如果当前轮是自己摸牌
@@ -1969,12 +1975,12 @@ int main()
                 if (last_player == -1) {
                     last_player = 3;
                 }
-                
-                int next_player = now_player+1;
+              
+                int next_player = now_player + 1;
                 if (next_player == 4) {
                     next_player = 0;
                 }
-                
+
                 if (qiangpai[next_player] != 0) { //如果下家墙牌还在，才能吃碰杠
                     if (op_now == "CHI") {
                         if (now_player != last_player) {
@@ -2015,7 +2021,5 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << endl;
-    
-    
     return 0;
 }
