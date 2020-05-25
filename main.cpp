@@ -488,71 +488,39 @@ void daotui_shunzi() {
             return;
         }
     }
-        int j;
-        //三色三同顺
-        if (fanzhong[0] == 6) {
-            i = fanzhong[1];
-            j = fanzhong[2];
-            for (i = 0; i < 3; ++i) {
-                jilu_shunzi(i, j);
-            }
+    int j;
+    //三色三同顺
+    if (fanzhong[0] == 6) {
+        i = fanzhong[1];
+        j = fanzhong[2];
+        for (i = 0; i < 3; ++i) {
+            jilu_shunzi(i, j);
+        }
+        return;
+    }
+    //三色三步高
+    if (fanzhong[0] == 7) {
+        i = fanzhong[1];
+        j = fanzhong[2];
+        if (i < 3) {
+            jilu_shunzi(i, j - 1);
+            jilu_shunzi((i + 1) % 3, j);
+            jilu_shunzi((i + 2) % 3, j + 1);
             return;
         }
-        //三色三步高
-        if (fanzhong[0] == 7) {
-            i = fanzhong[1];
-            j = fanzhong[2];
-            if (i < 3) {
-                jilu_shunzi(i, j - 1);
-                jilu_shunzi((i + 1) % 3, j);
-                jilu_shunzi((i + 2) % 3, j + 1);
-                return;
-            }
-            else {
-                i -= 3;
-                jilu_shunzi(i, j + 1);
-                jilu_shunzi((i + 1) % 3, j);
-                jilu_shunzi((i + 2) % 3, j - 1);
-                return;
-            }
+        else {
+            i -= 3;
+            jilu_shunzi(i, j + 1);
+            jilu_shunzi((i + 1) % 3, j);
+            jilu_shunzi((i + 2) % 3, j - 1);
+            return;
         }
+    }
 }
 
 void dingfan() {
     int yiyou;
     //计算对子数和各花色牌数
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 1; j <= 9; ++j) {
-            paizhong[i] += shu_[i * 9 + j];
-            if (shu_[i * 9 + j] >= 2) {
-                ++total_duizi;
-                if (shu_[i * 9 + j] == 2) {
-                    ++total_zhenduizi;
-                }
-                ++duizi[i];
-            }
-        }
-    }
-    for (int i = 1; i <= 4; ++i) {
-        paizhong[3] += feng_[i];
-        if (feng[i] >= 2) {
-            ++total_duizi;
-            if (feng[i] == 2) {
-                ++total_zhenduizi;
-            }
-            ++duizi[3];
-        }
-    }
-    for (int i = 1; i <= 3; ++i) {
-        paizhong[4] += jian_[i];
-        if (jian_[i] >= 2) {
-            ++total_duizi;
-            if (jian_[i] == 2) {
-                ++total_zhenduizi;
-            }
-            ++duizi[4];
-        }
-    }
 
     //判断碰碰胡，三个以上对子
     if (total_duizi >= 4) {
@@ -1764,13 +1732,16 @@ int main()
 
         //算出手牌加已鸣的牌
         quanbushoupai();
-        if (fanzhong[0] == 0) {
+        suanduizi();
+        if (fanzhong[0] == 0) {  
             dingfan();
             dingfan2();
         }
         daotui_shunzi();
-        suanduizi();
         fenlifanpai();
+        total_duizi = 0;
+        total_zhenduizi = 0;
+        suanduizi();
         canmingpai();
         paiquanzhong();
         dingfanjiaquan();
