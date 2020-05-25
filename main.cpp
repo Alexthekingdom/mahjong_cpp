@@ -50,13 +50,13 @@ int shunzi_paishu2(int i, int j) {//用于计算一个顺子中已有牌数，i�
 
 int shunzi_paishu(int i, int j) {//用于计算一个顺子中已有牌数，i为牌种，j为数字，表示顺子中间的牌，返回该顺子中已有的牌数
     int n = 0;
-    if (shu_[i * 9 + j - 1] > 0) {
+    if (shu[i * 9 + j - 1] > 0) {
         ++n;
     }
-    if (shu_[i * 9 + j] > 0) {
+    if (shu[i * 9 + j] > 0) {
         ++n;
     }
-    if (shu_[i * 9 + j + 1] > 0) {
+    if (shu[i * 9 + j + 1] > 0) {
         ++n;
     }
     return n;
@@ -88,20 +88,20 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
 void liujiang() {//当仅剩一个对子时，给该对子加权100
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
-            if (shu_[i] == 2) {
+            if (shu[i] == 2) {
                 shu_quan_[i][0] += 500;
                 shu_quan_[i][1] += 500;
                 return;
             }
         }
         for (int i = 1; i < 4; i++) {
-            if (feng_[i] == 2) {
+            if (feng[i] == 2) {
                 feng_quan_[i] += 500;
                 return;
             }
         }
         for (int i = 1; i < 3; i++) {
-            if (jian_[i] == 2) {
+            if (jian[i] == 2) {
                 jian_quan_[i] += 500;
                 return;
             }
@@ -281,10 +281,10 @@ void dingfan2() {
 void dingfanjiaquan() {
     for (int i = 0; i < 3; ++i) {
         for (int j = 1; j <= 9; ++j) {
-            paizhong[i] += shu_[i * 9 + j];
-            if (shu_[i * 9 + j] >= 2) {
+            paizhong[i] += shu[i * 9 + j];
+            if (shu[i * 9 + j] >= 2) {
                 ++total_duizi;
-                if (shu_[i * 9 + j] == 2) {
+                if (shu[i * 9 + j] == 2) {
                     ++total_zhenduizi;
                 }
                 ++duizi[i];
@@ -332,10 +332,11 @@ void dingfanjiaquan() {
             }
         }
         for (int i = 1; i <= 4; ++i) {
-            if (feng_[i] >= 2) {
+            if (feng[i] >= 2) {
                 feng_quan_[i] += 1000;
                 feng_quan_[i] += feng_remain[i] * 10;
-                if (feng_[i] >= 3) {
+              
+                if (feng[i] >= 3) {
                     feng_quan_[i] += 1000;
                 }
             }
@@ -344,7 +345,7 @@ void dingfanjiaquan() {
             }
         }
         for (int i = 1; i <= 3; ++i) {
-            if (jian_[i] >= 2) {
+            if (jian[i] >= 2) {
                 jian_quan_[i] += 1000;
                 jian_quan_[i] += jian_remain[i] * 10;
                 if (jian_[i] >= 3) {
@@ -389,7 +390,7 @@ void dingfanjiaquan() {
             shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
         }
         for (i = 1; i <= 4; ++i) {
-            if (feng_[i] >= 2) {
+            if (feng[i] >= 2) {
                 feng_quan_[i] += 1020;
                 feng_quan_[i] += feng_remain[i] * 10;
             }
@@ -400,7 +401,7 @@ void dingfanjiaquan() {
             }
         }
         for (i = 1; i <= 3; ++i) {
-            if (jian_[i] >= 2) {
+            if (jian[i] >= 2) {
                 jian_quan_[i] += 1020;
                 jian_quan_[i] += jian_remain[i] * 10;
             }
@@ -526,7 +527,7 @@ void fenlifanpai() {
     if (fanzhong[0] == 4) {
         i = fanzhong[1];
         for (int j = 1; j <= 9; ++j) {
-            if(shu[i * 9 + j]) --shu[i * 9 + j];
+            if (shu[i * 9 + j]) --shu[i * 9 + j];
         }
         return;
     }
@@ -535,18 +536,18 @@ void fenlifanpai() {
         i = fanzhong[1];
         if (i < 3) {
             for (int m = 1; m <= 3; ++m) {
-                if(shu[i * 9 + m]) --shu[i * 9 + m];
-                if(shu[((i + 1) % 3) * 9 + m + 3]) --shu[((i + 1) % 3) * 9 + m + 3];
-                if(--shu[((i + 2) % 3) * 9 + m + 6]) --shu[((i + 2) % 3) * 9 + m + 6];
+                if (shu[i * 9 + m]) --shu[i * 9 + m];
+                if (shu[((i + 1) % 3) * 9 + m + 3]) --shu[((i + 1) % 3) * 9 + m + 3];
+                if (--shu[((i + 2) % 3) * 9 + m + 6]) --shu[((i + 2) % 3) * 9 + m + 6];
             }
             return;
         }
         else {
             i -= 3;
             for (int m = 1; m <= 3; ++m) {
-                if(shu[i * 9 + m + 6]) --shu[i * 9 + m + 6];
-                if(shu[((i + 1) % 3) * 9 + m + 3]) --shu[((i + 1) % 3) * 9 + m + 3];
-                if(shu[((i + 2) % 3) * 9 + m]) --shu[((i + 2) % 3) * 9 + m];
+                if (shu[i * 9 + m + 6]) --shu[i * 9 + m + 6];
+                if (shu[((i + 1) % 3) * 9 + m + 3]) --shu[((i + 1) % 3) * 9 + m + 3];
+                if (shu[((i + 2) % 3) * 9 + m]) --shu[((i + 2) % 3) * 9 + m];
             }
             return;
         }
@@ -556,9 +557,9 @@ void fenlifanpai() {
             i = fanzhong[1];
             j = fanzhong[2];
             for (i = 0; i < 3; ++i) {
-                if(shu[i * 9 + j - 1]) --shu[i * 9 + j - 1];
-                if(shu[i * 9 + j]) --shu[i * 9 + j];
-                if(shu[i * 9 + j + 1]) --shu[i * 9 + j + 1];
+                if (shu[i * 9 + j - 1]) --shu[i * 9 + j - 1];
+                if (shu[i * 9 + j]) --shu[i * 9 + j];
+                if (shu[i * 9 + j + 1]) --shu[i * 9 + j + 1];
             }
             return;
         }
@@ -568,18 +569,18 @@ void fenlifanpai() {
             j = fanzhong[2];
             if (i < 3) {
                 for (int m = j - 1; m <= j + 1; ++m) {
-                    if(shu[i * 9 + m - 1]) --shu[i * 9 + m - 1];
-                    if(shu[((i + 1) % 3) * 9 + m]) --shu[((i + 1) % 3) * 9 + m];
-                    if(shu[((i + 2) % 3) * 9 + m + 1]) --shu[((i + 2) % 3) * 9 + m + 1];
+                    if (shu[i * 9 + m - 1]) --shu[i * 9 + m - 1];
+                    if (shu[((i + 1) % 3) * 9 + m]) --shu[((i + 1) % 3) * 9 + m];
+                    if (shu[((i + 2) % 3) * 9 + m + 1]) --shu[((i + 2) % 3) * 9 + m + 1];
                 }
                 return;
             }
             else {
                 i -= 3;
                 for (int m = j - 1; m <= j + 1; ++m) {
-                    if(shu[i * 9 + m + 1]) --shu[i * 9 + m + 1];
-                    if(shu[((i + 1) % 3) * 9 + m]) --shu[((i + 1) % 3) * 9 + m];
-                    if(shu[((i + 2) % 3) * 9 + m - 1]) --shu[((i + 2) % 3) * 9 + m - 1];
+                    if (shu[i * 9 + m + 1]) --shu[i * 9 + m + 1];
+                    if (shu[((i + 1) % 3) * 9 + m]) --shu[((i + 1) % 3) * 9 + m];
+                    if (shu[((i + 2) % 3) * 9 + m - 1]) --shu[((i + 2) % 3) * 9 + m - 1];
                 }
                 return;
             }
@@ -853,7 +854,7 @@ void paiquanzhong() {
             else if (shu[i * 9 + j] == 3) {//三张牌，可碰加吃或三张吃，其他情况的权重绝不会比这两种大，不讨论
                 if (shu_quan[i * 9 + j][1] > (maxquan(i * 9 + j, 2) + maxquan(i * 9 + j, 3))) {//碰加吃的权重大，此处两边都有最大权重的吃，因此不计算
                     if (maxquan(i * 9 + j, 1) == 0) {//没有能吃的，鸣牌权重等于碰，且用牌不损失
-                        shu_quan_[i * 9 + j][0] =  shu_quan[i * 9 + j][1] * 10;
+                        shu_quan_[i * 9 + j][0] = shu_quan[i * 9 + j][1] * 10;
                         shu_quan_[i * 9 + j][1] = 0;
                     }
                     else {//有能吃的，鸣牌权重等于碰加吃，用牌权重是鸣牌权重减去两个吃和碰里较大的
@@ -1827,9 +1828,6 @@ int main()
             }
         }
 
-
-
-        
         //算出手牌加已鸣的牌
         quanbushoupai();
         if (fanzhong[0] == 0) {
