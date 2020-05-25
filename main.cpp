@@ -331,18 +331,32 @@ void dingfanjiaquan() {
     //判断五门齐，风箭各一对,数牌至少有两种有一对或能吃
 
     if (fanzhong[0] == 2) {
-        for (int i = 1; i <= 4; ++i) {
-            if (feng_[i] >= 2) {
-                feng_quan_[i] += 1000;
-                feng_quan_[i] += feng_remain[i] * 10;
-                break;
-            }
-        }
-        for (int i = 1; i <= 3; ++i) {
-            if (jian_[i] >= 2) {
-                jian_quan_[i] += 1000;
-                jian_quan_[i] += jian_remain[i] * 10;
-                break;
+        for (int x = 0; x < 5; ++x) {
+            if (yiming_flag[x] == 0) {
+                if (x < 3) {
+                    for (int j = 1; j <= 9; ++j) {
+                        shu_quan_[x * 9 + j][0] += 1000;
+                        shu_quan_[x * 9 + j][1] += 1000;
+                    }
+                }
+                else if (x == 3) {
+                    for (int i = 1; i <= 4; ++i) {
+                        if (feng_[i] >= 2) {
+                            feng_quan_[i] += 2000;
+                            feng_quan_[i] += feng_remain[i] * 10;
+                            break;
+                        }
+                    }
+                }
+                else if (x == 4) {
+                    for (int i = 1; i <= 3; ++i) {
+                        if (jian_[i] >= 2) {
+                            jian_quan_[i] += 2000;
+                            jian_quan_[i] += jian_remain[i] * 10;
+                            break;
+                        }
+                    }
+                }
             }
         }
         return;
