@@ -1669,6 +1669,12 @@ int main()
                         sin >> itmp;
                         if (itmp == 2) { // 如果上回合摸牌，则为暗杠
                             sin >> stmp;
+                            gang_zi.push_back(stmp);
+                            // 暗GANG有4张，都从手里删掉
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
                         else { // 否则为明杠
                             sin >> itmp >> stmp;
@@ -1678,13 +1684,14 @@ int main()
                             else {
                                 sin >> stmp;
                             }
+                            gang_zi.push_back(stmp);
+                            // GANG有3张，都从手里删掉
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
+                            hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
 
-                        gang_zi.push_back(stmp);
-                        // GANG有3张，都从手里删掉
-                        hand.erase(find(hand.begin(), hand.end(), stmp));
-                        hand.erase(find(hand.begin(), hand.end(), stmp));
-                        hand.erase(find(hand.begin(), hand.end(), stmp));
+                        
                     }
                     else {
                         sin.clear();
