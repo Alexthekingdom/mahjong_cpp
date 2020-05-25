@@ -1,3 +1,4 @@
+//#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -84,8 +85,41 @@ void jilu_shunzi(int i, int j) {//记录番种所需顺子
     fan_shunzi[jilu_flag][1] = j;
     ++jilu_flag;
 }
-
-void liujiang() {//当仅剩一个对子时，给该对子加权100
+void suanduizi() {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 1; j <= 9; ++j) {
+            paizhong[i] += shu[i * 9 + j];
+            if (shu[i * 9 + j] >= 2) {
+                ++total_duizi;
+                if (shu[i * 9 + j] == 2) {
+                    ++total_zhenduizi;
+                }
+                ++duizi[i];
+            }
+        }
+    }
+    for (int i = 1; i <= 4; ++i) {
+        paizhong[3] += feng[i];
+        if (feng[i] >= 2) {
+            ++total_duizi;
+            if (feng[i] == 2) {
+                ++total_zhenduizi;
+            }
+            ++duizi[3];
+        }
+    }
+    for (int i = 1; i <= 3; ++i) {
+        paizhong[4] += jian_[i];
+        if (jian[i] >= 2) {
+            ++total_duizi;
+            if (jian[i] == 2) {
+                ++total_zhenduizi;
+            }
+            ++duizi[4];
+        }
+    }
+}
+void liujiang() {//当仅剩一个对子时，给该对子加权100  
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
             if (shu[i] == 2) {
@@ -300,10 +334,10 @@ void dingfanjiaquan() {
             }
         }
         for (int i = 1; i <= 4; ++i) {
-            if (feng_[i] >= 2) {
+            if (feng[i] >= 2) {
                 feng_quan_[i] += 1000;
                 feng_quan_[i] += feng_remain[i] * 10;
-                if (feng_[i] >= 3) {
+                if (feng[i] >= 3) {
                     feng_quan_[i] += 1000;
                 }
             }
@@ -312,10 +346,10 @@ void dingfanjiaquan() {
             }
         }
         for (int i = 1; i <= 3; ++i) {
-            if (jian_[i] >= 2) {
+            if (jian[i] >= 2) {
                 jian_quan_[i] += 1000;
                 jian_quan_[i] += jian_remain[i] * 10;
-                if (jian_[i] >= 3) {
+                if (jian[i] >= 3) {
                     jian_quan_[i] += 1000;
                 }
             }
@@ -341,7 +375,7 @@ void dingfanjiaquan() {
                 }
                 else if (x == 3) {
                     for (int i = 1; i <= 4; ++i) {
-                        if (feng_[i] >= 2) {
+                        if (feng[i] >= 2) {
                             feng_quan_[i] += 2000;
                             feng_quan_[i] += feng_remain[i] * 10;
                             break;
@@ -350,7 +384,7 @@ void dingfanjiaquan() {
                 }
                 else if (x == 4) {
                     for (int i = 1; i <= 3; ++i) {
-                        if (jian_[i] >= 2) {
+                        if (jian[i] >= 2) {
                             jian_quan_[i] += 2000;
                             jian_quan_[i] += jian_remain[i] * 10;
                             break;
@@ -371,7 +405,7 @@ void dingfanjiaquan() {
             shu_quan_[i * 9 + j][1] += shu_remain[i * 9 + j] * 10;
         }
         for (i = 1; i <= 4; ++i) {
-            if (feng_[i] >= 2) {
+            if (feng[i] >= 2) {
                 feng_quan_[i] += 1020;
                 feng_quan_[i] += feng_remain[i] * 10;
             }
@@ -382,7 +416,7 @@ void dingfanjiaquan() {
             }
         }
         for (i = 1; i <= 3; ++i) {
-            if (jian_[i] >= 2) {
+            if (jian[i] >= 2) {
                 jian_quan_[i] += 1020;
                 jian_quan_[i] += jian_remain[i] * 10;
             }
@@ -399,7 +433,7 @@ void dingfanjiaquan() {
                 i = fan_shunzi[x][0];
                 j = fan_shunzi[x][1];
                 for (int m = -1; m <= 1; ++m) {
-                    if (shu[i * 9 + j + m] == 1) {
+                    if (shu[i * 9 + j + m] == 0) {
                         shu_quan_[i * 9 + j + m][0] += 1000;
                         shu_quan_[i * 9 + j + m][1] += 1000;
                     }
@@ -407,6 +441,25 @@ void dingfanjiaquan() {
             }
         }
     }
+}
+
+void fenlifanpai() {
+    if (fanzhong[0] < 4) {
+        return;
+    }
+    int i, j;
+    for (int x = 0; x < 3; ++x) {
+        if (yiming_flag[x] == 0) {
+            i = fan_shunzi[x][0];
+            j = fan_shunzi[x][1];
+            for (int m = -1; m <= 1; ++m) {
+                if (shu[i * 9 + j + m]) {
+                    --shu[i * 9 + j + m];
+                }
+            }
+        }
+    }
+    return;
 }
 
 void dingfan() {
@@ -426,9 +479,9 @@ void dingfan() {
     }
     for (int i = 1; i <= 4; ++i) {
         paizhong[3] += feng_[i];
-        if (feng_[i] >= 2) {
+        if (feng[i] >= 2) {
             ++total_duizi;
-            if (feng_[i] == 2) {
+            if (feng[i] == 2) {
                 ++total_zhenduizi;
             }
             ++duizi[3];
@@ -1347,7 +1400,7 @@ int main()
     istringstream sin;
     sin.str(mydata[0]);
     sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3] >> yiming_flag[0] >> yiming_flag[1] >> yiming_flag[2] >> yiming_flag[3] >> yiming_flag[4]; //保持上一回合算的权重
-  
+
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
     }
@@ -1657,6 +1710,8 @@ int main()
             dingfan();
             dingfan2();
         }
+        suanduizi();
+        fenlifanpai();
         canmingpai();
         paiquanzhong();
         dingfanjiaquan();
