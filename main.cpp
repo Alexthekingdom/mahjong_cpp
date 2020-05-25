@@ -1,4 +1,3 @@
-//#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -460,6 +459,65 @@ void fenlifanpai() {
         }
     }
     return;
+}
+
+void daotui_shunzi() {
+    //清龙
+    int i;
+    if (fanzhong[0] == 4) {
+        i = fanzhong[1];
+        jilu_shunzi(i, 2);
+        jilu_shunzi(i, 5);
+        jilu_shunzi(i, 8);
+        return;
+    }
+    //花龙
+    int hualong = 7;
+    if (fanzhong[0] == 5) {
+        i = fanzhong[1];
+        if (i < 3) {
+            jilu_shunzi(i, 2);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 8);
+            return;
+        }
+        else {
+            i -= 3;
+            jilu_shunzi(i, 8);
+            jilu_shunzi((i + 1) % 3, 5);
+            jilu_shunzi((i + 2) % 3, 2);
+            return;
+        }
+        int j;
+        //三色三同顺
+        if (fanzhong[0] == 6) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            for (i = 0; i < 3; ++i) {
+                jiaquan(i, j + 1);
+                jilu_shunzi(i, j);
+            }
+            return;
+        }
+        //三色三步高
+        if (fanzhong[0] == 7) {
+            i = fanzhong[1];
+            j = fanzhong[2];
+            if (i < 3) {
+                jilu_shunzi(i, j - 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j + 1);
+                return;
+            }
+            else {
+                i -= 3;
+                jilu_shunzi(i, j + 1);
+                jilu_shunzi((i + 1) % 3, j);
+                jilu_shunzi((i + 2) % 3, j - 1);
+                return;
+            }
+        }
+    }
 }
 
 void dingfan() {
@@ -1561,6 +1619,8 @@ int main()
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
+
+
                     }
                     else {
                         sin.clear();
@@ -1652,7 +1712,7 @@ int main()
 
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1710,6 +1770,7 @@ int main()
             dingfan();
             dingfan2();
         }
+        daotui_shunzi();
         suanduizi();
         fenlifanpai();
         canmingpai();
@@ -1798,7 +1859,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
@@ -1875,5 +1936,7 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+
+
     return 0;
 }
