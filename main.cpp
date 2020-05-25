@@ -494,7 +494,6 @@ void daotui_shunzi() {
             i = fanzhong[1];
             j = fanzhong[2];
             for (i = 0; i < 3; ++i) {
-                jiaquan(i, j + 1);
                 jilu_shunzi(i, j);
             }
             return;
