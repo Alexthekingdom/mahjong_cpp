@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -335,6 +335,7 @@ void dingfanjiaquan() {
             if (feng[i] >= 2) {
                 feng_quan_[i] += 1000;
                 feng_quan_[i] += feng_remain[i] * 10;
+              
                 if (feng[i] >= 3) {
                     feng_quan_[i] += 1000;
                 }
@@ -1775,7 +1776,7 @@ int main()
 
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1826,9 +1827,6 @@ int main()
                 break;
             }
         }
-
-
-
 
         //算出手牌加已鸣的牌
         quanbushoupai();
@@ -1923,7 +1921,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
