@@ -1678,7 +1678,7 @@ int main()
 
                 }
             }
-            catch (const string & error) {
+            catch (const string& error) {
                 can_hu = 0;
             }
 
@@ -1828,7 +1828,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string & error) {
+                catch (const string& error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
