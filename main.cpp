@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-//#include "MahjongGB/MahjongGB.h"//用于线上调试
+//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -120,27 +120,58 @@ void suanduizi() {
         }
     }
 }
-void liujiang() {//当仅剩一个对子时，给该对子加权100  
+void liujiang() {//当仅剩一个对子时，给该对子加权100
     if (total_zhenduizi == 1) {
         for (int i = 1; i < 28; i++) {
             if (shu[i] == 2) {
                 shu_quan_[i][0] += 500;
                 shu_quan_[i][1] += 500;
+                shu[i]-=2;
                 return;
             }
         }
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i < 5; i++) {
             if (feng[i] == 2) {
                 feng_quan_[i] += 500;
+                feng[i] -= 2;
                 return;
             }
         }
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i < 3; i++) {
             if (jian[i] == 2) {
                 jian_quan_[i] += 500;
+                jian[i] -= 2;
                 return;
             }
         }
+    }
+    else if(total_zhenduizi>1&&fanzhong[0]>3){
+        for (int i = 1; i < 5; i++) {
+            if (feng[i] == 2) {
+                feng_quan_[i] += 500;
+                feng[i] -= 2;
+                return;
+            }
+        }
+        for (int i = 1; i < 3; i++) {
+            if (jian[i] == 2) {
+                jian_quan_[i] += 500;
+                jian[i] -= 2;
+                return;
+            }
+        }
+        int shu_temp = -1;
+        int shu_quan_temp = 9999;
+        for (int i = 1; i < 28; i++) {
+            if (shu[i] == 2&&(shu_quan_[i][1]<shu_quan_temp)) {
+                shu_temp = i;
+                shu_quan_temp = shu_quan_[i][1];
+            }
+        }
+        shu_quan_[shu_temp][0] += 500;
+        shu_quan_[shu_temp][1] += 500;
+        shu[shu_temp] -= 2;
+        return;
     }
 }
 
