@@ -1570,7 +1570,7 @@ int main()
                 string op;
                 sin >> op; //当前轮操作
 
-                if (op == "DRAW" || op == "GANG" || op == "BUGANG") {
+                if (op == "DRAW") {
                     qiangpai[now_id]--;
                 }
                 if (op == "PLAY") {
