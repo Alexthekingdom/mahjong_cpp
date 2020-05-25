@@ -472,7 +472,6 @@ void daotui_shunzi() {
         return;
     }
     //花龙
-    int hualong = 7;
     if (fanzhong[0] == 5) {
         i = fanzhong[1];
         if (i < 3) {
@@ -488,6 +487,7 @@ void daotui_shunzi() {
             jilu_shunzi((i + 2) % 3, 2);
             return;
         }
+    }
         int j;
         //三色三同顺
         if (fanzhong[0] == 6) {
@@ -516,7 +516,6 @@ void daotui_shunzi() {
                 return;
             }
         }
-    }
 }
 
 void dingfan() {
