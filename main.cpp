@@ -1347,7 +1347,7 @@ int main()
     istringstream sin;
     sin.str(mydata[0]);
     sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3] >> yiming_flag[0] >> yiming_flag[1] >> yiming_flag[2] >> yiming_flag[3] >> yiming_flag[4]; //保持上一回合算的权重
-
+  
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
     }
@@ -1508,8 +1508,6 @@ int main()
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
-
-
                     }
                     else {
                         sin.clear();
@@ -1822,7 +1820,5 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
-
-
     return 0;
 }
