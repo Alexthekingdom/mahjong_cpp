@@ -1561,8 +1561,6 @@ int main()
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
-
-
                     }
                     else {
                         sin.clear();
@@ -1654,7 +1652,7 @@ int main()
 
                 }
             }
-            catch (const string& error) {
+            catch (const string & error) {
                 can_hu = 0;
             }
 
@@ -1800,7 +1798,7 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string& error) {
+                catch (const string & error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
@@ -1877,7 +1875,5 @@ int main()
     cout << response[turnID] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
     cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
-
-
     return 0;
 }
