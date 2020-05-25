@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-//#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
-#include "MahjongGB/MahjongGB.h"//用于线上调试
+#include "Mahjong-GB-CPP/MahjongGB/MahjongGB.h" //用于Alex的本地调试
+//#include "MahjongGB/MahjongGB.h"//用于线上调试
 #include <utility>
 
 using namespace std;
@@ -1252,7 +1252,7 @@ void quanzhongzuixiao(string& a) {
     char kind;
     int num = 999;
     for (int i = 1; i < 28; i++) {
-        if (shu[i] != 0) {
+        if (shu[i] > 0) {
             if (shu_quan_[i][1] < shu_temp) {//>=使得权重相同时，先打序号大的牌
                 shu_temp = shu_quan_[i][1];
                 shu_min = i;
@@ -1260,7 +1260,7 @@ void quanzhongzuixiao(string& a) {
         }
     }
     for (int i = 1; i < 5; i++) {
-        if (feng[i] != 0) {
+        if (feng[i] > 0) {
             if (feng_quan_[i] <= feng_temp) {
                 feng_temp = feng_quan_[i];
                 feng_min = i;
@@ -1268,7 +1268,7 @@ void quanzhongzuixiao(string& a) {
         }
     }
     for (int i = 1; i < 4; i++) {
-        if (jian[i] != 0) {
+        if (jian[i] > 0) {
             if (jian_quan_[i] <= jian_temp) {
                 jian_temp = jian_quan_[i];
                 jian_min = i;
@@ -1346,8 +1346,8 @@ int main()
     mydata.push_back(stmp);
     istringstream sin;
     sin.str(mydata[0]);
-    sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3] >> yiming_flag [0] >> yiming_flag [1] >>yiming_flag [2] >>yiming_flag [3] >>yiming_flag [4]; //保持上一回合算的权重
-
+    sin >> fanzhong[0] >> fanzhong[1] >> fanzhong[2] >> fanzhong[3] >> yiming_flag[0] >> yiming_flag[1] >> yiming_flag[2] >> yiming_flag[3] >> yiming_flag[4]; //保持上一回合算的权重
+  
     if (turnID < 2) { // round 0，1，不需要做任何处理，直接输出pass
         response.push_back("PASS");
     }
@@ -1508,8 +1508,6 @@ int main()
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                             hand.erase(find(hand.begin(), hand.end(), stmp));
                         }
-
-                        
                     }
                     else {
                         sin.clear();
@@ -1601,7 +1599,7 @@ int main()
 
                 }
             }
-            catch (const string& error) {
+            catch (const string & error) {
                 can_hu = 0;
             }
 
@@ -1609,8 +1607,8 @@ int main()
                 sout << "HU";
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                 return 0;
             }
         }
@@ -1682,16 +1680,16 @@ int main()
                 sout << "GANG " << stmp;
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                 return 0;
             }
             if (find(ke_zi.begin(), ke_zi.end(), stmp) != ke_zi.end()) {
                 sout << "BUGANG " << stmp;
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                 return 0;
             }
         }
@@ -1712,8 +1710,8 @@ int main()
                 sout << "PASS";
                 response.push_back(sout.str());
                 cout << response[turnID] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                 return 0;
             }
             if (qiangpai[now_player] == 0) {
@@ -1745,15 +1743,15 @@ int main()
                         can_hu = 1;
                     }
                 }
-                catch (const string& error) {
+                catch (const string & error) {
                     can_hu = 0;
                 }
                 if (can_hu == 1) {
                     sout << "HU";
                     response.push_back(sout.str());
                     cout << response[turnID] << endl;
-                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                     return 0;
                 }
 
@@ -1761,8 +1759,8 @@ int main()
                     sout << "PASS";
                     response.push_back(sout.str());
                     cout << response[turnID] << endl;
-                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+                    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
                     return 0;
                 }
 
@@ -1820,9 +1818,7 @@ int main()
         response.push_back(sout.str());
     }
     cout << response[turnID] << endl;
-    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag [0] << " " << yiming_flag [1] << " " << yiming_flag [2] << " " << yiming_flag [3] << " " << yiming_flag [4] << endl;
-
-
+    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
+    cout << fanzhong[0] << " " << fanzhong[1] << " " << fanzhong[2] << " " << fanzhong[3] << " " << yiming_flag[0] << " " << yiming_flag[1] << " " << yiming_flag[2] << " " << yiming_flag[3] << " " << yiming_flag[4] << endl;
     return 0;
 }
